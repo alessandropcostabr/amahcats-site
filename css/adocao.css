@@ -1,0 +1,427 @@
+/* ============================================================
+   Amah Cats — Adocao LP styles
+   Depende de css/style.css (tokens, .btn, .form-group, etc.)
+   ============================================================ */
+
+/* ─── Hero Short ─────────────────────────────────────────── */
+.hero-short {
+  background: var(--color-primary);
+  padding: 7rem 1.5rem 4rem;
+  text-align: center;
+}
+
+.hero-short__title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 900;
+  color: var(--color-white);
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+
+.hero-short__title span {
+  color: var(--color-amber);
+}
+
+.hero-short__subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ─── Wizard Page ────────────────────────────────────────── */
+.wizard-page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding-top: 8rem;
+  padding-bottom: 3rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* ─── Wizard ─────────────────────────────────────────────── */
+.wizard {
+  width: 100%;
+  max-width: 640px;
+  background: var(--color-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-inline: 1rem;
+}
+
+/* ─── Wizard Header ──────────────────────────────────────── */
+.wizard__header {
+  background: var(--color-primary);
+  color: var(--color-white);
+  padding: 1.5rem 1.75rem 1rem;
+}
+
+.wizard__header-title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 0.75rem;
+}
+
+/* ─── Wizard Step Bar ────────────────────────────────────── */
+.wizard__steps {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.wizard__step {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  transition: background var(--transition);
+}
+
+.wizard__step--done {
+  background: var(--color-amber);
+}
+
+.wizard__step--active {
+  background: var(--color-accent);
+}
+
+/* ─── Wizard Progress ────────────────────────────────────── */
+.wizard__progress {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ─── Wizard Body ────────────────────────────────────────── */
+.wizard__body {
+  padding: 1.75rem;
+}
+
+/* ─── Wizard Panels ──────────────────────────────────────── */
+.wizard__panel {
+  display: none;
+}
+
+.wizard__panel--active {
+  display: block;
+}
+
+.wizard__panel-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+/* ─── Wizard Nav ─────────────────────────────────────────── */
+.wizard__nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.75rem;
+  gap: 1rem;
+  padding: 0 1.75rem 1.75rem;
+}
+
+.wizard__nav .btn:only-child {
+  margin-left: auto;
+}
+
+/* ─── Resumo ─────────────────────────────────────────────── */
+.resumo-section {
+  margin-bottom: 1.25rem;
+}
+
+.resumo-section__title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.resumo-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.875rem;
+}
+
+.resumo-row__label {
+  color: var(--color-muted);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.resumo-row__value {
+  color: var(--color-text);
+  text-align: right;
+}
+
+/* ─── Kit Options (radio como cards) ────────────────────── */
+.kit-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.kit-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.kit-option:has(input:checked) {
+  border-color: var(--color-accent);
+  background: rgba(232, 93, 117, 0.04);
+}
+
+.kit-option input[type='radio'] {
+  accent-color: var(--color-accent);
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.kit-option__info {
+  flex: 1;
+}
+
+.kit-option__name {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--color-primary);
+}
+
+.kit-option__desc {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.kit-option__price {
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* ─── Kit Help Link ──────────────────────────────────────── */
+.kit-help {
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.kit-help a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* ─── Conditional fields ─────────────────────────────────── */
+.conditional {
+  display: none;
+}
+
+.conditional--visible {
+  display: block;
+}
+
+/* ─── Field errors ───────────────────────────────────────── */
+.field-error {
+  display: none;
+  font-size: 0.78rem;
+  color: var(--color-accent);
+  margin-top: 0.25rem;
+}
+
+.field-error--visible {
+  display: block;
+}
+
+/* ─── Invalid inputs ─────────────────────────────────────── */
+.form-group input.invalid,
+.form-group select.invalid,
+.form-group textarea.invalid {
+  border-color: var(--color-accent);
+  outline-color: var(--color-accent);
+}
+
+.radio-group.invalid label {
+  border-color: var(--color-accent);
+}
+
+.consent-group.invalid {
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-input);
+  padding: 0.5rem 0.75rem;
+}
+
+/* ─── Validation alert banner ───────────────────────────── */
+.validation-alert {
+  display: none;
+  background: rgba(232, 93, 117, 0.08);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-input);
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.validation-alert--visible {
+  display: block;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+
+/* ─── Textarea ───────────────────────────────────────────── */
+.form-group textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background: var(--color-white);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-input);
+  padding: 0.65rem 0.9rem;
+  transition: border-color var(--transition);
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* ─── Radio Group ────────────────────────────────────────── */
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.radio-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.radio-group label:has(input:checked) {
+  border-color: var(--color-accent);
+  background: rgba(232, 93, 117, 0.06);
+}
+
+.radio-group input[type='radio'] {
+  accent-color: var(--color-accent);
+}
+
+/* ─── Success Card ──────────────────────────────────────── */
+.success-card {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.success-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-white);
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+}
+
+.success-card__title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.success-card__text {
+  font-size: 0.95rem;
+  color: var(--color-muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 400px;
+  margin-inline: auto;
+}
+
+/* ─── Consent ───────────────────────────────────────────── */
+.consent-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.consent-group input[type='checkbox'] {
+  margin-top: 0.2rem;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* ─── Responsivo ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .wizard {
+    margin-inline: 0.5rem;
+  }
+
+  .wizard__body {
+    padding: 1.25rem;
+  }
+
+  .wizard__nav {
+    flex-wrap: wrap;
+  }
+
+  .wizard__nav .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .resumo-row {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .resumo-row__value {
+    text-align: left;
+  }
+}

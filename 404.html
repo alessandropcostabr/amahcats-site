@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 - Pagina nao encontrada</title>
+  <link rel="stylesheet" href="css/style.css?v=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    .error-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    .error-page__code {
+      font-size: 6rem;
+      font-weight: 900;
+      color: var(--color-accent);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .error-page__title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+    .error-page__text {
+      color: var(--color-muted);
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-page">
+    <div>
+      <div class="error-page__code">404</div>
+      <h1 class="error-page__title">Pagina nao encontrada</h1>
+      <p class="error-page__text">A pagina que voce procura nao existe ou foi movida.</p>
+      <a href="/" class="btn btn--primary">Voltar ao inicio</a>
+    </div>
+  </div>
+</body>
+</html>
