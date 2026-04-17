@@ -4,14 +4,8 @@
 function initHeader() {
   var header = document.getElementById('header');
   if (!header) return;
-  var hasHero = document.querySelector('.hero, .hero-short');
-  if (!hasHero) {
-    header.classList.add('header--scrolled');
-    return;
-  }
-  window.addEventListener('scroll', function() {
-    header.classList.toggle('header--scrolled', window.scrollY > 50);
-  });
+  // Hero claro - header sempre sólido (sem toggle transparente)
+  header.classList.add('header--scrolled');
 }
 
 // ─── Menu Mobile ────────────────────────────────────────────────────────────

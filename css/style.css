@@ -5,7 +5,7 @@
 /* ─── Tokens ─────────────────────────────────────────────── */
 :root {
   --color-primary:  #4a3f6b;
-  --color-accent:   #e85d75;
+  --color-accent:   #d16b78;
   --color-amber:    #f0b955;
   --color-bg:       #f9f7fc;
   --color-white:    #ffffff;
@@ -196,7 +196,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero {
   position: relative;
   min-height: 520px;
-  background: #f8f1ea;
+  background: #fdf5e2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,7 +270,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .form-group select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(232,93,117,0.12);
+  box-shadow: 0 0 0 3px rgba(209,107,120,0.12);
 }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .consent-group { display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 1.25rem; }
