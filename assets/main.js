@@ -44,7 +44,7 @@ function submitForm(e) {
   var feedback = document.querySelector('.form-feedback');
   if (!consentEl || !consentEl.checked) {
     if (feedback) {
-      feedback.textContent = 'Voce precisa aceitar os termos para continuar.';
+      feedback.textContent = 'Você precisa aceitar os termos para continuar.';
       feedback.className = 'form-feedback form-feedback--error';
     }
     return Promise.resolve();
@@ -69,7 +69,7 @@ function submitForm(e) {
         var form = document.getElementById('adoptForm');
         if (form) form.reset();
         if (feedback) {
-          feedback.textContent = 'Recebemos sua solicitacao! Entraremos em contato em breve.';
+          feedback.textContent = 'Recebemos sua solicitação! Entraremos em contato em breve.';
           feedback.className = 'form-feedback form-feedback--success';
         }
       } else {

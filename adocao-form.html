@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Amah Cats - Formulario de adocao responsavel" />
-  <title>Amah Cats - Formulario de Adocao</title>
+  <meta name="description" content="Amah Cats - Formulário de adoção responsável" />
+  <title>Amah Cats - Formulário de Adoção</title>
   <link rel="icon" type="image/png" href="assets/amahcats_logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=1" />
-  <link rel="stylesheet" href="css/adocao.css?v=1" />
+  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/adocao.css?v=2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <a href="#main-content" class="skip-nav">Pular para o conteudo</a>
+  <a href="#main-content" class="skip-nav">Pular para o conteúdo</a>
 
   <!-- HEADER-->
   <header class="header" id="header" role="banner">
-    <a href="/" class="header__logo" aria-label="Amah Cats - pagina inicial">
+    <a href="/" class="header__logo" aria-label="Amah Cats - página inicial">
       <img src="assets/amahcats_logo.png" alt="Amah Cats" />
     </a>
-    <nav class="header__nav" id="mainNav" aria-label="Navegacao principal">
+    <nav class="header__nav" id="mainNav" aria-label="Navegação principal">
       <a href="/#adocao">Adotar</a>
       <div class="header__actions">
         <div class="header__socials" aria-label="Redes sociais">
@@ -40,7 +40,7 @@
       <div class="wizard">
 
         <div class="wizard__header">
-          <h2 class="wizard__title">Formulario de Adocao</h2>
+          <h2 class="wizard__title">Formulário de Adoção</h2>
           <div class="wizard__steps">
             <div class="wizard__step wizard__step--active"></div>
             <div class="wizard__step"></div>
@@ -48,13 +48,14 @@
             <div class="wizard__step"></div>
           </div>
           <p class="wizard__progress">Etapa 1 de 4 - Dados Pessoais</p>
+          <p class="wizard__time-hint">Tempo estimado: ~5 minutos</p>
         </div>
 
         <div class="wizard__body">
 
           <!-- PANEL 0: Dados Pessoais-->
           <div class="wizard__panel wizard__panel--active" data-step="0">
-            <h3 class="wizard__panel-title">Informacoes pessoais</h3>
+            <h3 class="wizard__panel-title">Informações pessoais</h3>
             <div class="validation-alert" role="alert"></div>
 
             <div class="form-row">
@@ -81,7 +82,7 @@
               </div>
               <div class="form-group">
                 <label for="data_nascimento">Data de nascimento</label>
-                <input type="date" id="data_nascimento" name="data_nascimento" required />
+                <input type="date" id="data_nascimento" name="data_nascimento" autocomplete="bday" required />
               </div>
             </div>
 
@@ -93,13 +94,13 @@
                   <option value="solteiro">Solteiro(a)</option>
                   <option value="casado">Casado(a)</option>
                   <option value="divorciado">Divorciado(a)</option>
-                  <option value="viuvo">Viuvo(a)</option>
-                  <option value="uniao_estavel">Uniao estavel</option>
+                  <option value="viuvo">Viúvo(a)</option>
+                  <option value="uniao_estavel">União estável</option>
                 </select>
               </div>
               <div class="form-group">
-                <label for="profissao">Profissao</label>
-                <input type="text" id="profissao" name="profissao" required placeholder="Sua profissao" />
+                <label for="profissao">Profissão</label>
+                <input type="text" id="profissao" name="profissao" autocomplete="organization-title" required placeholder="Sua profissão" />
               </div>
             </div>
 
@@ -116,16 +117,16 @@
 
             <div class="form-group">
               <label for="cep">CEP</label>
-              <input type="text" id="cep" name="cep" required placeholder="00000-000" />
+              <input type="text" id="cep" name="cep" autocomplete="postal-code" required placeholder="00000-000" />
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label for="rua">Rua</label>
-                <input type="text" id="rua" name="rua" readonly placeholder="Preenchido automaticamente" />
+                <input type="text" id="rua" name="rua" autocomplete="street-address" readonly placeholder="Preenchido automaticamente" />
               </div>
               <div class="form-group">
-                <label for="numero">Numero</label>
+                <label for="numero">Número</label>
                 <input type="text" id="numero" name="numero" required placeholder="Ex: 123" />
               </div>
             </div>
@@ -164,13 +165,13 @@
             <div class="validation-alert" role="alert"></div>
 
             <div class="form-group">
-              <label for="raca">De qual raca? (opcional)</label>
-              <input type="text" id="raca" name="raca" placeholder="Ex: Vira-lata, Siames..." />
+              <label for="raca">De qual raça? (opcional)</label>
+              <input type="text" id="raca" name="raca" placeholder="Ex: Vira-lata, Siamês..." />
             </div>
 
             <div class="form-group">
               <fieldset>
-                <legend>O pet e para voce ou para presentear?</legend>
+                <legend>O pet é para você ou para presentear?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="para_quem" value="para_mim" required />
@@ -185,13 +186,13 @@
             </div>
 
             <div class="form-group">
-              <label for="motivo_adocao">Por que voce quer adotar?</label>
-              <textarea id="motivo_adocao" name="motivo_adocao" required rows="4" placeholder="Conte um pouco sobre sua motivacao..."></textarea>
+              <label for="motivo_adocao">Por que você quer adotar?</label>
+              <textarea id="motivo_adocao" name="motivo_adocao" required rows="4" placeholder="Conte um pouco sobre sua motivação..."></textarea>
             </div>
 
             <div class="form-group">
               <fieldset>
-                <legend>Tem experiencia com gatos?</legend>
+                <legend>Tem experiência com gatos?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="experiencia" value="sim" required />
@@ -199,7 +200,7 @@
                   </label>
                   <label>
                     <input type="radio" name="experiencia" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -207,20 +208,20 @@
 
             <div class="conditional" id="experiencia_detalhes">
               <div class="form-group">
-                <label for="experiencia_texto">Conte mais sobre sua experiencia</label>
+                <label for="experiencia_texto">Conte mais sobre sua experiência</label>
                 <textarea id="experiencia_texto" name="experiencia_texto" rows="3" placeholder="Quantos anos? Que tipo de animal?"></textarea>
               </div>
             </div>
           </div>
 
-          <!-- PANEL 2: Sua Residencia-->
+          <!-- PANEL 2: Sua Residência-->
           <div class="wizard__panel" data-step="2">
-            <h3 class="wizard__panel-title">Sua residencia</h3>
+            <h3 class="wizard__panel-title">Sua residência</h3>
             <div class="validation-alert" role="alert"></div>
 
             <div class="form-group">
               <fieldset>
-                <legend>Tipo de imovel</legend>
+                <legend>Tipo de imóvel</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="tipo_imovel" value="casa" required />
@@ -236,11 +237,11 @@
 
             <div class="form-group">
               <fieldset>
-                <legend>Imovel proprio ou alugado?</legend>
+                <legend>Imóvel próprio ou alugado?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="imovel_proprio" value="proprio" required />
-                    Proprio
+                    Próprio
                   </label>
                   <label>
                     <input type="radio" name="imovel_proprio" value="alugado" />
@@ -252,7 +253,7 @@
 
             <div class="form-group">
               <fieldset>
-                <legend>Janelas sao teladas?</legend>
+                <legend>Janelas são teladas?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="janelas_teladas" value="sim" required />
@@ -260,7 +261,7 @@
                   </label>
                   <label>
                     <input type="radio" name="janelas_teladas" value="nao" />
-                    Nao
+                    Não
                   </label>
                   <label>
                     <input type="radio" name="janelas_teladas" value="parcialmente" />
@@ -277,7 +278,7 @@
 
             <div class="form-group">
               <fieldset>
-                <legend>Todas concordam com a adocao?</legend>
+                <legend>Todas concordam com a adoção?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="todos_concordam" value="sim" required />
@@ -285,7 +286,7 @@
                   </label>
                   <label>
                     <input type="radio" name="todos_concordam" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -293,7 +294,7 @@
 
             <div class="form-group">
               <fieldset>
-                <legend>Voce tem quintal?</legend>
+                <legend>Você tem quintal?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="tem_quintal" value="sim" required />
@@ -301,7 +302,7 @@
                   </label>
                   <label>
                     <input type="radio" name="tem_quintal" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -309,7 +310,7 @@
 
             <div class="form-group">
               <fieldset>
-                <legend>Voce tem criancas em casa?</legend>
+                <legend>Você tem crianças em casa?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="tem_criancas" value="sim" required />
@@ -317,7 +318,7 @@
                   </label>
                   <label>
                     <input type="radio" name="tem_criancas" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -325,14 +326,14 @@
 
             <div class="conditional" id="criancas_container">
               <div class="form-group">
-                <label for="criancas_detalhes">Quantas criancas e suas idades?</label>
-                <input type="text" id="criancas_detalhes" name="criancas_detalhes" placeholder="Ex: 2 criancas, 4 e 8 anos" />
+                <label for="criancas_detalhes">Quantas crianças e suas idades?</label>
+                <input type="text" id="criancas_detalhes" name="criancas_detalhes" placeholder="Ex: 2 crianças, 4 e 8 anos" />
               </div>
             </div>
 
             <div class="form-group">
               <fieldset>
-                <legend>Ja tem outros animais?</legend>
+                <legend>Já tem outros animais?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="tem_animais" value="sim" required />
@@ -340,7 +341,7 @@
                   </label>
                   <label>
                     <input type="radio" name="tem_animais" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -353,7 +354,7 @@
               </div>
               <div class="form-group">
                 <fieldset>
-                  <legend>Estao vacinados e castrados?</legend>
+                  <legend>Estão vacinados e castrados?</legend>
                   <div class="radio-group">
                     <label>
                       <input type="radio" name="animais_castrados" value="sim" />
@@ -361,7 +362,7 @@
                     </label>
                     <label>
                       <input type="radio" name="animais_castrados" value="nao" />
-                      Nao
+                      Não
                     </label>
                     <label>
                       <input type="radio" name="animais_castrados" value="parcialmente" />
@@ -374,7 +375,7 @@
 
             <div class="form-group">
               <fieldset>
-                <legend>Alguem da familia possui algum tipo de alergia?</legend>
+                <legend>Alguém da família possui algum tipo de alergia?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="alergia_familia" value="sim" required />
@@ -382,7 +383,7 @@
                   </label>
                   <label>
                     <input type="radio" name="alergia_familia" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -391,19 +392,19 @@
             <div class="conditional" id="alergia_detalhes">
               <div class="form-group">
                 <label for="alergia_qual">Qual alergia?</label>
-                <input type="text" id="alergia_qual" name="alergia_qual" placeholder="Ex: rinite alergica, alergia a pelos..." />
+                <input type="text" id="alergia_qual" name="alergia_qual" placeholder="Ex: rinite alérgica, alergia a pelos..." />
               </div>
             </div>
           </div>
 
-          <!-- PANEL 3: Tempo, Recursos e Revisao -->
+          <!-- PANEL 3: Tempo, Recursos e Revisão -->
           <div class="wizard__panel" data-step="3">
-            <h3 class="wizard__panel-title">Tempo, recursos e revisao</h3>
+            <h3 class="wizard__panel-title">Tempo, recursos e revisão</h3>
             <div class="validation-alert" role="alert"></div>
 
             <div class="form-group">
               <fieldset>
-                <legend>Voce tem tempo suficiente para cuidar de um animal?</legend>
+                <legend>Você tem tempo suficiente para cuidar de um animal?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="tempo_cuidar" value="sim" required />
@@ -411,7 +412,7 @@
                   </label>
                   <label>
                     <input type="radio" name="tempo_cuidar" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -419,7 +420,7 @@
 
             <div class="form-group">
               <fieldset>
-                <legend>Voce tem recursos financeiros para cuidar de um animal?</legend>
+                <legend>Você tem recursos financeiros para cuidar de um animal?</legend>
                 <div class="radio-group">
                   <label>
                     <input type="radio" name="recursos_financeiros" value="sim" required />
@@ -427,7 +428,7 @@
                   </label>
                   <label>
                     <input type="radio" name="recursos_financeiros" value="nao" />
-                    Nao
+                    Não
                   </label>
                 </div>
               </fieldset>
@@ -435,25 +436,25 @@
 
             <div class="conditional" id="recursos_container">
               <div class="form-group">
-                <label for="recursos_detalhes">Especifique (racao, vacinas, consultas veterinarias, etc.)</label>
-                <textarea id="recursos_detalhes" name="recursos_detalhes" rows="3" placeholder="Ex: tenho condicoes para alimentacao de qualidade, vacinas e consultas veterinarias..."></textarea>
+                <label for="recursos_detalhes">Especifique (ração, vacinas, consultas veterinárias, etc.)</label>
+                <textarea id="recursos_detalhes" name="recursos_detalhes" rows="3" placeholder="Ex: tenho condições para alimentação de qualidade, vacinas e consultas veterinárias..."></textarea>
               </div>
             </div>
 
             <div id="resumo"></div>
 
             <div class="form-group">
-              <label class="form-group__label">Escolha o kit de adocao:</label>
+              <label class="form-group__label">Escolha o kit de adoção:</label>
               <div class="kit-selector">
                 <label class="kit-option">
                   <input type="radio" name="kit" value="kit1" required />
                   <span class="kit-option__title">Kit 1 - R$ 35</span>
-                  <span class="kit-option__desc">Vermifugacao + despulgamento</span>
+                  <span class="kit-option__desc">Vermifugação + despulgamento</span>
                 </label>
                 <label class="kit-option">
                   <input type="radio" name="kit" value="kit2" />
                   <span class="kit-option__title">Kit 2 - R$ 100</span>
-                  <span class="kit-option__desc">+ vacina + castracao + consulta</span>
+                  <span class="kit-option__desc">+ vacina + castração + consulta</span>
                 </label>
                 <label class="kit-option">
                   <input type="radio" name="kit" value="kit3" />
@@ -466,21 +467,21 @@
             <div class="consent-group">
               <input type="checkbox" id="consent_form" name="consent_form" required />
               <label for="consent_form">
-                Li e aceito a <a href="/privacidade" target="_blank">Politica de Privacidade</a>.
-                Autorizo o tratamento dos meus dados para fins de adocao.
-                Estou ciente de que podera haver custos de taxa de adocao referentes a microchip, vacinas e castracao.
+                Li e aceito a <a href="/privacidade" target="_blank">Política de Privacidade</a>.
+                Autorizo o tratamento dos meus dados para fins de adoção.
+                Estou ciente de que poderá haver custos de taxa de adoção referentes a microchip, vacinas e castração.
               </label>
             </div>
 
           </div>
 
-          <!-- Tela de sucesso (oculta por padrao) -->
+          <!-- Tela de sucesso (oculta por padrão) -->
           <div class="wizard__panel wizard__success" data-step="4">
             <div class="success-card">
               <div class="success-card__icon">&#10003;</div>
-              <h3 class="success-card__title">Formulario enviado com sucesso!</h3>
+              <h3 class="success-card__title">Formulário enviado com sucesso!</h3>
               <p class="success-card__text">
-                Obrigado pelo interesse em adotar! Nossa equipe vai analisar suas informacoes
+                Obrigado pelo interesse em adotar! Nossa equipe vai analisar suas informações
                 e entraremos em contato em breve para agendar a entrevista.
               </p>
               <a href="/" class="btn btn--primary">Voltar ao site</a>
@@ -490,8 +491,8 @@
         </div><!-- /.wizard__body-->
 
         <div class="wizard__nav">
-          <button id="btnPrev" class="btn btn--outline" type="button">&larr; Voltar</button>
-          <button id="btnNext" class="btn btn--primary" type="button">Proximo &rarr;</button>
+          <button id="btnPrev" class="btn btn--outline" type="button" aria-label="Voltar para a etapa anterior">&larr; Voltar</button>
+          <button id="btnNext" class="btn btn--primary" type="button" aria-label="Avançar para a próxima etapa">Próximo &rarr;</button>
         </div>
 
         <div class="form-feedback" role="alert" aria-live="polite"></div>
@@ -505,10 +506,10 @@
   <footer class="footer" role="contentinfo">
     <div class="footer__inner">
       <div>
-        <a href="/" class="footer__logo" aria-label="Amah Cats - pagina inicial">
+        <a href="/" class="footer__logo" aria-label="Amah Cats - página inicial">
           <img src="assets/amahcats_logo.png" alt="Amah Cats" />
         </a>
-        <p class="footer__tagline">Tatuape - SP</p>
+        <p class="footer__tagline">Tatuapé - SP</p>
       </div>
       <div class="footer__links">
         <a href="/privacidade">Privacidade</a>
@@ -522,8 +523,8 @@
     </div>
   </footer>
 
-  <script src="assets/main.js?v=1"></script>
-  <script src="assets/adocao-form.js?v=1"></script>
+  <script src="assets/main.js?v=2"></script>
+  <script src="assets/adocao-form.js?v=2"></script>
 
 </body>
 </html>
