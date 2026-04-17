@@ -196,7 +196,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero {
   position: relative;
   min-height: 520px;
-  background: linear-gradient(135deg, var(--color-primary) 0%, #6c5ce7 100%);
+  background: linear-gradient(135deg, #f5f0eb 0%, #faf0f2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -205,22 +205,22 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .hero__content { max-width: 600px; }
 .hero__logo {
-  width: 180px;
+  width: 240px;
   height: auto;
   margin: 0 auto 2rem;
-  filter: brightness(0) invert(1);
+  border-radius: var(--radius-card);
 }
 .hero__title {
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   font-weight: 900;
   line-height: 1.15;
-  color: var(--color-white);
+  color: var(--color-primary);
   margin-bottom: 0.75rem;
 }
-.hero__title em { font-style: normal; color: var(--color-amber); }
+.hero__title em { font-style: normal; color: var(--color-accent); }
 .hero__subtitle {
   font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--color-muted);
   margin-bottom: 2rem;
 }
 .hero__cta { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
@@ -289,7 +289,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-bottom: 1px solid rgba(255,255,255,0.15);
   margin-bottom: 1.5rem;
 }
-.footer__logo img { height: 40px; filter: brightness(0) invert(1); }
+.footer__logo img { height: 40px; border-radius: 6px; }
 .footer__tagline { font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 0.5rem; }
 .footer__links { display: flex; gap: 1.5rem; align-items: center; }
 .footer__links a { color: rgba(255,255,255,0.7); font-size: 0.85rem; font-weight: 600; transition: color var(--transition); }
@@ -355,7 +355,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   }
 
   .hero { min-height: 420px; padding: 7rem 1.25rem 3.5rem; }
-  .hero__logo { width: 140px; }
+  .hero__logo { width: 180px; }
 
   .form-row { grid-template-columns: 1fr; }
   .footer__inner { grid-template-columns: 1fr; }
