@@ -9,12 +9,13 @@
 - [x] Adicionar CNAME no Cloudflare apontando para o tunnel
 - [ ] Aguardar propagação DNS
 
-### amahcats.com.br (no Cloudflare, aguardando pagamento registro.br)
-- [ ] Concluir pagamento do registro.br
-- [ ] Atualizar nameservers no registrador:
+### amahcats.com.br (no Cloudflare)
+- [x] Concluir pagamento do registro.br
+- [x] Atualizar nameservers no registrador:
   - `may.ns.cloudflare.com`
   - `roman.ns.cloudflare.com`
-- [ ] Adicionar CNAME no Cloudflare apontando para o tunnel (após zone ativar)
+- [x] Adicionar CNAME no Cloudflare apontando para o tunnel
+- [ ] Aguardar propagação DNS
 
 ### CNAME records (após zones ativarem)
 Para cada zone, criar:

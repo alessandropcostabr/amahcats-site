@@ -2,3 +2,4 @@
 ecosystem.config.js
 node_modules/
 .superpowers/
+backup/
