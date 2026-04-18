@@ -81,6 +81,8 @@ const blockedInternalPathPatterns = [
   /^\/CLAUDE\.md$/i,
   /^\/TO_DO\.md$/i,
   /^\/ecosystem\.config\.js$/i,
+  /^\/\.env$/i,
+  /^\/\.env\./i,
 ];
 
 // Tipos MIME
@@ -112,6 +114,14 @@ const SCANNER_PATTERNS = [
   /^\/actuator/, /^\/debug\//, /^\/console/,
   /^\/backup/, /^\/dump/,
   /~$/, /\.bak$/, /\.swp$/, /\.php$/, /\.sql$/, /\.tar\.gz$/, /\.zip$/,
+  /\.asp$/i, /\.aspx$/i, /\.jsp$/i,
+  /^\/shell/i, /^\/cmd/i, /^\/eval/i,
+  /^\/database/i, /^\/mysql/i, /^\/pma/i,
+  /^\/jenkins/i, /^\/solr/i, /^\/telescope/i,
+  /^\/elfinder/i, /^\/filemanager/i,
+  /^\/graphql/i, /^\/api\/graphql/i,
+  /^\/\.svn/i, /^\/\.hg/i,
+  /^\/wp-content\//i, /^\/wp-includes\//i,
 ];
 
 const NOISY_404_PATTERNS = [
@@ -132,11 +142,11 @@ const SECURITY_HEADERS = {
   'X-Frame-Options': 'DENY',
   'X-XSS-Protection': '0',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
   'Content-Security-Policy': [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+    "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data:",
@@ -671,7 +681,7 @@ function handleEntrevista(req, res, clientIp) {
     }
 
     // Verificar Turnstile no step final (step 4)
-    if (step === 4) {
+    if (step === 3) {
       var turnstileToken = (data['cf-turnstile-response'] || '');
       var turnstileValid = await verifyTurnstile(turnstileToken, clientIp);
       if (!turnstileValid) {
@@ -849,11 +859,11 @@ async function handleEntrevistaStepN(res, step, fields, opportunityId, opportuni
     }
 
     console.info('[' + localTimestamp() + '] ENTREVISTA step' + step + '->LATE opp=' + opportunityId + ' ok');
-    var message = step === 4 ? 'Formulario enviado com sucesso!' : 'Dados salvos!';
+    var message = step === 3 ? 'Formulário enviado com sucesso!' : 'Dados salvos!';
     sendJson(res, 200, { success: true, message: message });
   } catch (err) {
     console.error('[' + localTimestamp() + '] ENTREVISTA step' + step + '->LATE ERRO: ' + err.message);
-    if (step === 4) {
+    if (step === 3) {
       sendJson(res, 500, { success: false, message: 'Erro ao enviar formulario. Tente novamente.' });
     } else {
       saveContingencyJson({

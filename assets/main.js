@@ -31,45 +31,14 @@ function initMenu() {
   });
 }
 
-// ─── Turnstile (modo explicito) ────────────────────────────────────────────
-var _turnstileWidgetId = null;
-var _turnstileContainer = null;
-var _turnstileSitekey = '0x4AAAAAAC_Lg8Rm0d1KUA14';
-
-function renderTurnstile() {
-  _turnstileContainer = document.getElementById('turnstile-container');
-  if (!_turnstileContainer) return;
-  if (typeof window.turnstile === 'undefined') return;
-  _turnstileWidgetId = window.turnstile.render(_turnstileContainer, {
-    sitekey: _turnstileSitekey,
-    theme: 'light',
-  });
+// ─── Turnstile (auto-render) ───────────────────────────────────────────────
+function getTurnstileToken() {
+  var input = document.querySelector('[name="cf-turnstile-response"]');
+  return input ? input.value || '' : '';
 }
 
 function resetTurnstile() {
-  if (_turnstileWidgetId !== null && typeof window.turnstile !== 'undefined') {
-    window.turnstile.reset(_turnstileWidgetId);
-  }
-}
-
-function getTurnstileToken() {
-  if (_turnstileWidgetId !== null && typeof window.turnstile !== 'undefined') {
-    return window.turnstile.getResponse(_turnstileWidgetId) || '';
-  }
-  return '';
-}
-
-function initTurnstile() {
-  if (!document.getElementById('turnstile-container')) return;
-  if (typeof window.turnstile !== 'undefined') {
-    renderTurnstile();
-  } else {
-    var orig = window.onloadTurnstileCallback;
-    window.onloadTurnstileCallback = function() {
-      if (typeof orig === 'function') orig();
-      renderTurnstile();
-    };
-  }
+  if (typeof window.turnstile !== 'undefined') window.turnstile.reset();
 }
 
 // ─── Formulario de Adocao ───────────────────────────────────────────────────
@@ -178,7 +147,6 @@ function initCookieBanner() {
 function init() {
   initHeader();
   initMenu();
-  initTurnstile();
   initForm();
   initFadeIn();
   initCookieBanner();
@@ -194,10 +162,8 @@ if (typeof module !== 'undefined' && module.exports) {
     initHeader: initHeader,
     toggleMenu: toggleMenu,
     initMenu: initMenu,
-    renderTurnstile: renderTurnstile,
-    resetTurnstile: resetTurnstile,
     getTurnstileToken: getTurnstileToken,
-    initTurnstile: initTurnstile,
+    resetTurnstile: resetTurnstile,
     submitForm: submitForm,
     initForm: initForm,
     initFadeIn: initFadeIn,
