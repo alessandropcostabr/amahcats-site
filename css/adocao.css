@@ -5,7 +5,7 @@
 
 /* ─── Hero Short ─────────────────────────────────────────── */
 .hero-short {
-  background: var(--color-primary);
+  background: var(--color-dark);
   padding: 7rem 1.5rem 4rem;
   text-align: center;
 }
@@ -19,7 +19,7 @@
 }
 
 .hero-short__title span {
-  color: var(--color-amber);
+  color: var(--color-accent);
 }
 
 .hero-short__subtitle {
@@ -51,7 +51,7 @@
 
 /* ─── Wizard Header ──────────────────────────────────────── */
 .wizard__header {
-  background: var(--color-primary);
+  background: var(--color-dark);
   color: var(--color-white);
   padding: 1.5rem 1.75rem 1rem;
 }
@@ -78,7 +78,7 @@
 }
 
 .wizard__step--done {
-  background: var(--color-amber);
+  background: var(--color-accent);
 }
 
 .wizard__step--active {
@@ -108,7 +108,7 @@
 .wizard__panel-title {
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--color-primary);
+  color: var(--color-dark);
   margin-bottom: 1.25rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--color-accent);
@@ -202,7 +202,7 @@
 .kit-option__name {
   font-weight: 800;
   font-size: 0.9rem;
-  color: var(--color-primary);
+  color: var(--color-dark);
 }
 
 .kit-option__desc {
@@ -367,7 +367,7 @@
 .success-card__title {
   font-size: 1.3rem;
   font-weight: 900;
-  color: var(--color-primary);
+  color: var(--color-dark);
   margin-bottom: 1rem;
 }
 

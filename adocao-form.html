@@ -6,18 +6,18 @@
   <meta name="description" content="Amah Cats - Formulário de adoção responsável" />
   <title>Amah Cats - Formulário de Adoção</title>
   <link rel="icon" type="image/png" href="assets/amahcats_logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=3" />
-  <link rel="stylesheet" href="css/adocao.css?v=3" />
+  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/adocao.css?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet" />
 </head>
 <body>
 
   <a href="#main-content" class="skip-nav">Pular para o conteúdo</a>
 
   <!-- HEADER-->
-  <header class="header" id="header" role="banner">
+  <header class="header header--scrolled" id="header" role="banner">
     <a href="/" class="header__logo" aria-label="Amah Cats - página inicial">
       <img src="assets/amahcats_logo.png" alt="Amah Cats" />
     </a>
@@ -473,6 +473,8 @@
               </label>
             </div>
 
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAC_Lg8Rm0d1KUA14"></div>
+
           </div>
 
           <!-- Tela de sucesso (oculta por padrão) -->
@@ -509,7 +511,7 @@
         <a href="/" class="footer__logo" aria-label="Amah Cats - página inicial">
           <img src="assets/amahcats_logo.png" alt="Amah Cats" />
         </a>
-        <p class="footer__tagline">Tatuapé - SP</p>
+        <p class="footer__tagline">Pequenas vidas. Grandes recomeços.</p>
       </div>
       <div class="footer__links">
         <a href="/privacidade">Privacidade</a>
@@ -519,12 +521,32 @@
       </div>
     </div>
     <div class="footer__bottom">
-      <span>Amah Cats</span>
+      <span>Amah Cats - Zona Leste de São Paulo</span>
     </div>
   </footer>
 
-  <script src="assets/main.js?v=3"></script>
-  <script src="assets/adocao-form.js?v=3"></script>
+  <!-- Cookie Banner -->
+  <div id="cookie-banner" class="cookie-banner" role="region" aria-label="Aviso de cookies" aria-describedby="cookie-text">
+    <div class="cookie-banner-inner">
+      <p class="cookie-text" id="cookie-text">
+        Usamos cookies em nosso site para fornecer a melhor experiência, lembrando de suas preferências.
+        Ao clicar em "Aceitar todos", você concorda com o uso de TODOS os cookies.
+        Saiba mais em nossa <a href="/privacidade">Política de Privacidade</a>.
+      </p>
+      <div class="cookie-actions">
+        <button class="cookie-btn cookie-btn-settings" id="cookie-settings" type="button">
+          Configurações de cookies
+        </button>
+        <button class="cookie-btn cookie-btn-accept" id="cookie-accept" type="button">
+          Aceitar todos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="assets/main.js?v=4"></script>
+  <script src="assets/adocao-form.js?v=4"></script>
 
 </body>
 </html>

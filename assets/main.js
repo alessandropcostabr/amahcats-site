@@ -53,10 +53,15 @@ function submitForm(e) {
   var telefone = telefoneEl ? telefoneEl.value.trim() : '';
 
   var nomeCompleto = sobrenome ? nome + ' ' + sobrenome : nome;
+
+  var turnstileResponse = '';
+  var turnstileEl = document.querySelector('.cf-turnstile [name="cf-turnstile-response"]');
+  if (turnstileEl) turnstileResponse = turnstileEl.value;
+
   return fetch('/api/adocao', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome: nomeCompleto, email: email, telefone: telefone, especie: 'gatos', consent: true }),
+    body: JSON.stringify({ nome: nomeCompleto, email: email, telefone: telefone, especie: 'gatos', consent: true, 'cf-turnstile-response': turnstileResponse }),
   }).then(function(res) {
     return res.json().then(function(data) {
       if (res.ok && data.success) {
@@ -66,6 +71,7 @@ function submitForm(e) {
           feedback.textContent = 'Recebemos sua solicitação! Entraremos em contato em breve.';
           feedback.className = 'form-feedback form-feedback--success';
         }
+        if (typeof turnstile !== 'undefined') turnstile.reset();
       } else {
         throw new Error('server error');
       }
@@ -75,6 +81,7 @@ function submitForm(e) {
       feedback.textContent = 'Ocorreu um erro. Por favor, tente novamente.';
       feedback.className = 'form-feedback form-feedback--error';
     }
+    if (typeof turnstile !== 'undefined') turnstile.reset();
   });
 }
 
@@ -98,12 +105,43 @@ function initFadeIn() {
   els.forEach(function(el) { observer.observe(el); });
 }
 
+// ─── Cookie Banner ──────────────────────────────────────────────────────────
+function initCookieBanner() {
+  var banner = document.getElementById('cookie-banner');
+  var COOKIE_KEY = 'amahcats_cookies_accepted';
+
+  if (banner) {
+    var stored = localStorage.getItem(COOKIE_KEY);
+    if (!stored) {
+      banner.classList.add('is-visible');
+    }
+
+    var acceptBtn = document.getElementById('cookie-accept');
+    var settingsBtn = document.getElementById('cookie-settings');
+
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', function() {
+        localStorage.setItem(COOKIE_KEY, 'all');
+        banner.classList.remove('is-visible');
+      });
+    }
+
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', function() {
+        localStorage.setItem(COOKIE_KEY, 'essential');
+        banner.classList.remove('is-visible');
+      });
+    }
+  }
+}
+
 // ─── Init (browser only) ────────────────────────────────────────────────────
 function init() {
   initHeader();
   initMenu();
   initForm();
   initFadeIn();
+  initCookieBanner();
 }
 
 if (typeof document !== 'undefined' && typeof module === 'undefined') {
@@ -119,6 +157,7 @@ if (typeof module !== 'undefined' && module.exports) {
     submitForm: submitForm,
     initForm: initForm,
     initFadeIn: initFadeIn,
+    initCookieBanner: initCookieBanner,
     init: init,
   };
 }

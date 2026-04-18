@@ -26,6 +26,8 @@ const CRM_INTAKE_URL = process.env.CRM_INTAKE_URL || 'http://192.168.0.253:3100/
 const CRM_INTAKE_TOKEN = process.env.CRM_INTAKE_TOKEN || '';
 
 // ---------- HMAC Secrets (seguranca de formularios) ----------
+const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET || '';
+
 const OPPORTUNITY_HMAC_SECRET = process.env.OPPORTUNITY_HMAC_SECRET || '';
 const PREFILL_TOKEN_SECRET = process.env.PREFILL_TOKEN_SECRET || '';
 
@@ -134,11 +136,11 @@ const SECURITY_HEADERS = {
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
   'Content-Security-Policy': [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data:",
-    "frame-src 'none'",
+    "frame-src https://challenges.cloudflare.com",
     "connect-src 'self' https://viacep.com.br",
     "object-src 'none'",
     "base-uri 'self'",
@@ -235,6 +237,38 @@ function getClientIp(req) {
 
 function localTimestamp() {
   return new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+}
+
+// ---------- Turnstile verification ----------
+async function verifyTurnstile(token, ip) {
+  if (!TURNSTILE_SECRET) return true;
+  if (!token) return false;
+  try {
+    var body = JSON.stringify({
+      secret: TURNSTILE_SECRET,
+      response: token,
+      remoteip: ip,
+    });
+    var resp = await new Promise(function(resolve, reject) {
+      var req = require('https').request({
+        hostname: 'challenges.cloudflare.com',
+        path: '/turnstile/v0/siteverify',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+      }, function(res) {
+        var data = '';
+        res.on('data', function(chunk) { data += chunk; });
+        res.on('end', function() { resolve(JSON.parse(data)); });
+      });
+      req.on('error', reject);
+      req.write(body);
+      req.end();
+    });
+    return resp.success === true;
+  } catch (err) {
+    console.error('[' + localTimestamp() + '] Turnstile verification error:', err.message);
+    return false;
+  }
 }
 
 // ---------- Rate limiting para /api/adocao e /api/entrevista ----------
@@ -492,6 +526,13 @@ function handleAdocao(req, res, clientIp) {
       return;
     }
 
+    var turnstileToken = (data['cf-turnstile-response'] || '');
+    var turnstileValid = await verifyTurnstile(turnstileToken, clientIp);
+    if (!turnstileValid) {
+      sendJson(res, 403, { success: false, message: 'Verificação de segurança falhou. Recarregue a página e tente novamente.' });
+      return;
+    }
+
     var nome = (data.nome || '').trim().slice(0, 255);
     var email = (data.email || '').trim().slice(0, 254);
     var telefone = (data.telefone || '').trim().replace(/\D/g, '').slice(0, 15);
@@ -629,6 +670,16 @@ function handleEntrevista(req, res, clientIp) {
       return;
     }
 
+    // Verificar Turnstile no step final (step 4)
+    if (step === 4) {
+      var turnstileToken = (data['cf-turnstile-response'] || '');
+      var turnstileValid = await verifyTurnstile(turnstileToken, clientIp);
+      if (!turnstileValid) {
+        sendJson(res, 403, { success: false, message: 'Verificação de segurança falhou. Recarregue a página e tente novamente.' });
+        return;
+      }
+    }
+
     if (step === 1) {
       await handleEntrevistaStep1(res, fields, clientIp, req);
     } else {
@@ -753,7 +804,7 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
 
 // Mapeia nomes do formulario HTML para nomes canonicos dos custom fields no LATE
 var FIELD_RENAME = { raca: 'raca_interesse', animais_quais: 'quais_animais' };
-var FIELD_STRIP = { tipo_animal: true, consent: true, consent_form: true };
+var FIELD_STRIP = { tipo_animal: true, consent: true, consent_form: true, 'cf-turnstile-response': true };
 
 async function handleEntrevistaStepN(res, step, fields, opportunityId, opportunitySig) {
   if (!opportunityId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(opportunityId)) {

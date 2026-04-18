@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Amah Cats - Adoção responsável de gatinhos em Tatuapé, SP." />
+  <meta name="description" content="Amah Cats - Resgate e adoção responsável de gatos filhotes na Zona Leste de São Paulo. Pequenas vidas, grandes recomeços." />
   <title>Amah Cats - Adoção Responsável</title>
   <link rel="icon" type="image/png" href="assets/amahcats_logo.png" />
-  <link rel="stylesheet" href="css/style.css?v=3" />
+  <link rel="stylesheet" href="css/style.css?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -21,6 +21,7 @@
       <img src="assets/amahcats_logo.png" alt="Amah Cats" />
     </a>
     <nav class="header__nav" id="mainNav" aria-label="Navegação principal">
+      <a href="#sobre">Sobre</a>
       <a href="#adocao">Adotar</a>
       <div class="header__actions">
         <div class="header__socials" aria-label="Redes sociais">
@@ -40,13 +41,23 @@
       <div class="hero__content">
         <img src="assets/amahcats_logo.png" alt="Amah Cats" class="hero__logo" width="240" height="240" />
         <h1 class="hero__title">
-          Adote um <em>gatinho</em>
+          Pequenas vidas. <em>Grandes recomeços.</em>
         </h1>
-        <p class="hero__subtitle">Conheça nossos felinos e encontre seu novo companheiro.</p>
+        <p class="hero__subtitle">Resgate e adoção responsável de gatos filhotes na Zona Leste de São Paulo.</p>
         <div class="hero__cta">
           <a href="#adocao" class="btn btn--primary">Quero adotar</a>
           <a href="/adocao-form" class="btn btn--outline">Formulário completo</a>
         </div>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="sobre" id="sobre" aria-labelledby="sobre-title">
+      <div class="sobre__inner fade-in">
+        <span class="section-label">Quem somos</span>
+        <h2 class="section-title" id="sobre-title">Sobre a <span>Amah Cats</span></h2>
+        <p>A Amah Cats é um projeto independente criado por amigas unidas por um mesmo propósito: proteger, resgatar e transformar a realidade de gatos filhotes em situação de abandono e risco.</p>
+        <p>Atuamos na Zona Leste de São Paulo, uma região com alta demanda por resgates e poucos recursos estruturados para acolhimento animal. Nosso trabalho é feito com empatia, responsabilidade e, acima de tudo, amor.</p>
       </div>
     </section>
 
@@ -84,6 +95,7 @@
                 Autorizo o contato pelo WhatsApp informado.
               </label>
             </div>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAC_Lg8Rm0d1KUA14"></div>
             <button type="submit" class="btn btn--primary">Quero adotar</button>
             <div class="form-feedback" role="alert" aria-live="polite"></div>
           </form>
@@ -100,7 +112,7 @@
         <a href="/" class="footer__logo" aria-label="Amah Cats - página inicial">
           <img src="assets/amahcats_logo.png" alt="Amah Cats" />
         </a>
-        <p class="footer__tagline">Tatuapé - SP</p>
+        <p class="footer__tagline">Pequenas vidas. Grandes recomeços.</p>
       </div>
       <div class="footer__links">
         <a href="/privacidade">Privacidade</a>
@@ -110,11 +122,31 @@
       </div>
     </div>
     <div class="footer__bottom">
-      <span>Amah Cats</span>
+      <span>Amah Cats - Zona Leste de São Paulo</span>
     </div>
   </footer>
 
-  <script src="assets/main.js?v=3"></script>
+  <!-- Cookie Banner -->
+  <div id="cookie-banner" class="cookie-banner" role="region" aria-label="Aviso de cookies" aria-describedby="cookie-text">
+    <div class="cookie-banner-inner">
+      <p class="cookie-text" id="cookie-text">
+        Usamos cookies em nosso site para fornecer a melhor experiência, lembrando de suas preferências.
+        Ao clicar em "Aceitar todos", você concorda com o uso de TODOS os cookies.
+        Saiba mais em nossa <a href="/privacidade">Política de Privacidade</a>.
+      </p>
+      <div class="cookie-actions">
+        <button class="cookie-btn cookie-btn-settings" id="cookie-settings" type="button">
+          Configurações de cookies
+        </button>
+        <button class="cookie-btn cookie-btn-accept" id="cookie-accept" type="button">
+          Aceitar todos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="assets/main.js?v=4"></script>
 
 </body>
 </html>
