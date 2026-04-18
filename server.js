@@ -141,7 +141,7 @@ const SECURITY_HEADERS = {
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data:",
     "frame-src https://challenges.cloudflare.com",
-    "connect-src 'self' https://viacep.com.br",
+    "connect-src 'self' https://viacep.com.br https://challenges.cloudflare.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

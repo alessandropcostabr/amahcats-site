@@ -316,10 +316,8 @@ function submitForm() {
 
   var formData = collectFormData();
 
-  var turnstileResponse = '';
-  var turnstileEl = document.querySelector('.cf-turnstile [name="cf-turnstile-response"]');
-  if (turnstileEl) turnstileResponse = turnstileEl.value;
-  formData['cf-turnstile-response'] = turnstileResponse;
+  var turnstileToken = getTurnstileToken();
+  formData['cf-turnstile-response'] = turnstileToken;
 
   return fetch('/api/entrevista', {
     method: 'POST',
@@ -338,7 +336,7 @@ function submitForm() {
             feedback.className = 'form-feedback form-feedback--success';
           }
         }
-        if (typeof turnstile !== 'undefined') turnstile.reset();
+        resetTurnstile();
       } else {
         throw new Error('server error');
       }
@@ -348,7 +346,7 @@ function submitForm() {
       feedback.textContent = 'Ocorreu um erro. Por favor, tente novamente.';
       feedback.className = 'form-feedback form-feedback--error';
     }
-    if (typeof turnstile !== 'undefined') turnstile.reset();
+    resetTurnstile();
   });
 }
 
@@ -540,10 +538,8 @@ function submitStep(stepNumber) {
       feedback.className = 'form-feedback form-feedback--info';
     }
 
-    var turnstileResponse = '';
-    var turnstileEl = document.querySelector('.cf-turnstile [name="cf-turnstile-response"]');
-    if (turnstileEl) turnstileResponse = turnstileEl.value;
-    payload['cf-turnstile-response'] = turnstileResponse;
+    var turnstileToken = getTurnstileToken();
+    payload['cf-turnstile-response'] = turnstileToken;
 
     return fetch('/api/entrevista', {
       method: 'POST',
@@ -572,7 +568,7 @@ function submitStep(stepNumber) {
           feedback.textContent = result.message || 'Erro ao enviar.';
           feedback.className = 'form-feedback form-feedback--error';
         }
-        if (typeof turnstile !== 'undefined') turnstile.reset();
+        resetTurnstile();
       }
     })
     .catch(function() {
@@ -580,7 +576,7 @@ function submitStep(stepNumber) {
         feedback.textContent = 'Erro de conexão. Tente novamente.';
         feedback.className = 'form-feedback form-feedback--error';
       }
-      if (typeof turnstile !== 'undefined') turnstile.reset();
+      resetTurnstile();
     });
   }
 

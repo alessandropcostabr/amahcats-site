@@ -31,6 +31,47 @@ function initMenu() {
   });
 }
 
+// ─── Turnstile (modo explicito) ────────────────────────────────────────────
+var _turnstileWidgetId = null;
+var _turnstileContainer = null;
+var _turnstileSitekey = '0x4AAAAAAC_Lg8Rm0d1KUA14';
+
+function renderTurnstile() {
+  _turnstileContainer = document.getElementById('turnstile-container');
+  if (!_turnstileContainer) return;
+  if (typeof window.turnstile === 'undefined') return;
+  _turnstileWidgetId = window.turnstile.render(_turnstileContainer, {
+    sitekey: _turnstileSitekey,
+    theme: 'light',
+  });
+}
+
+function resetTurnstile() {
+  if (_turnstileWidgetId !== null && typeof window.turnstile !== 'undefined') {
+    window.turnstile.reset(_turnstileWidgetId);
+  }
+}
+
+function getTurnstileToken() {
+  if (_turnstileWidgetId !== null && typeof window.turnstile !== 'undefined') {
+    return window.turnstile.getResponse(_turnstileWidgetId) || '';
+  }
+  return '';
+}
+
+function initTurnstile() {
+  if (!document.getElementById('turnstile-container')) return;
+  if (typeof window.turnstile !== 'undefined') {
+    renderTurnstile();
+  } else {
+    var orig = window.onloadTurnstileCallback;
+    window.onloadTurnstileCallback = function() {
+      if (typeof orig === 'function') orig();
+      renderTurnstile();
+    };
+  }
+}
+
 // ─── Formulario de Adocao ───────────────────────────────────────────────────
 function submitForm(e) {
   if (e && e.preventDefault) e.preventDefault();
@@ -54,14 +95,12 @@ function submitForm(e) {
 
   var nomeCompleto = sobrenome ? nome + ' ' + sobrenome : nome;
 
-  var turnstileResponse = '';
-  var turnstileEl = document.querySelector('.cf-turnstile [name="cf-turnstile-response"]');
-  if (turnstileEl) turnstileResponse = turnstileEl.value;
+  var turnstileToken = getTurnstileToken();
 
   return fetch('/api/adocao', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nome: nomeCompleto, email: email, telefone: telefone, especie: 'gatos', consent: true, 'cf-turnstile-response': turnstileResponse }),
+    body: JSON.stringify({ nome: nomeCompleto, email: email, telefone: telefone, especie: 'gatos', consent: true, 'cf-turnstile-response': turnstileToken }),
   }).then(function(res) {
     return res.json().then(function(data) {
       if (res.ok && data.success) {
@@ -71,7 +110,7 @@ function submitForm(e) {
           feedback.textContent = 'Recebemos sua solicitação! Entraremos em contato em breve.';
           feedback.className = 'form-feedback form-feedback--success';
         }
-        if (typeof turnstile !== 'undefined') turnstile.reset();
+        resetTurnstile();
       } else {
         throw new Error('server error');
       }
@@ -81,7 +120,7 @@ function submitForm(e) {
       feedback.textContent = 'Ocorreu um erro. Por favor, tente novamente.';
       feedback.className = 'form-feedback form-feedback--error';
     }
-    if (typeof turnstile !== 'undefined') turnstile.reset();
+    resetTurnstile();
   });
 }
 
@@ -139,6 +178,7 @@ function initCookieBanner() {
 function init() {
   initHeader();
   initMenu();
+  initTurnstile();
   initForm();
   initFadeIn();
   initCookieBanner();
@@ -154,6 +194,10 @@ if (typeof module !== 'undefined' && module.exports) {
     initHeader: initHeader,
     toggleMenu: toggleMenu,
     initMenu: initMenu,
+    renderTurnstile: renderTurnstile,
+    resetTurnstile: resetTurnstile,
+    getTurnstileToken: getTurnstileToken,
+    initTurnstile: initTurnstile,
     submitForm: submitForm,
     initForm: initForm,
     initFadeIn: initFadeIn,
