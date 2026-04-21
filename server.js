@@ -473,7 +473,7 @@ function saveContingencyJson(data) {
   }
 }
 
-async function forwardToIntake({ nome, email, telefone, especie, mensagem, clientIp, clientUa, source }) {
+async function forwardToIntake({ nome, email, telefone, especie, mensagem, clientIp, clientUa, howFound }) {
   var payload = {
     name: nome,
     phone: normalizePhoneBR(telefone) || undefined,
@@ -482,7 +482,8 @@ async function forwardToIntake({ nome, email, telefone, especie, mensagem, clien
     message: mensagem || undefined,
     client_ip: clientIp || undefined,
     client_ua: clientUa || undefined,
-    source: source || 'amahcats',
+    how_found: howFound || undefined,
+    intake_source: 'amahcats',
   };
 
   var response = await fetch(CRM_INTAKE_URL, {
@@ -532,7 +533,7 @@ function handleAdocao(req, res, clientIp) {
     try {
       data = JSON.parse(Buffer.concat(chunks).toString('utf8'));
     } catch {
-      sendJson(res, 400, { success: false, message: 'JSON invalido.' });
+      sendJson(res, 400, { success: false, message: 'JSON inválido.' });
       return;
     }
 
@@ -548,19 +549,20 @@ function handleAdocao(req, res, clientIp) {
     var telefone = (data.telefone || '').trim().replace(/\D/g, '').slice(0, 15);
     var especie = (data.especie || '').trim().slice(0, 50);
     var mensagem = (data.mensagem || '').trim().slice(0, 2000);
+    var comoConheceu = (data.como_conheceu || '').trim().slice(0, 100);
 
     if (!nome || !email || !telefone) {
-      sendJson(res, 400, { success: false, message: 'Preencha todos os campos obrigatorios.' });
+      sendJson(res, 400, { success: false, message: 'Preencha todos os campos obrigatórios.' });
       return;
     }
 
     if (!EMAIL_REGEX.test(email)) {
-      sendJson(res, 400, { success: false, message: 'E-mail invalido.' });
+      sendJson(res, 400, { success: false, message: 'E-mail inválido.' });
       return;
     }
 
     if (telefone.length < 10) {
-      sendJson(res, 400, { success: false, message: 'Telefone invalido.' });
+      sendJson(res, 400, { success: false, message: 'Telefone inválido.' });
       return;
     }
 
@@ -572,7 +574,7 @@ function handleAdocao(req, res, clientIp) {
         nome, email, telefone, especie, mensagem,
         clientIp: clientIp,
         clientUa: req.headers['user-agent'] || '',
-        source: 'amahcats',
+        howFound: comoConheceu,
       });
       console.info('[' + localTimestamp() + '] ADOCAO->LATE id=' + ((result.data && result.data.contact_id) || 'ok') + ' email="' + maskEmail(email) + '"');
       sendJson(res, 200, { success: true, message: 'Interesse registrado com sucesso!' });
@@ -592,7 +594,7 @@ function handleAdocao(req, res, clientIp) {
       }
 
       if (err.statusCode && err.statusCode >= 400 && err.statusCode < 500) {
-        sendJson(res, 400, { success: false, message: 'Dados invalidos. Verifique os campos e tente novamente.' });
+        sendJson(res, 400, { success: false, message: 'Dados inválidos. Verifique os campos e tente novamente.' });
         return;
       }
 
@@ -666,7 +668,7 @@ function handleEntrevista(req, res, clientIp) {
     try {
       data = JSON.parse(Buffer.concat(chunks).toString('utf8'));
     } catch {
-      sendJson(res, 400, { success: false, message: 'JSON invalido.' });
+      sendJson(res, 400, { success: false, message: 'JSON inválido.' });
       return;
     }
 
@@ -676,7 +678,7 @@ function handleEntrevista(req, res, clientIp) {
     var opportunitySig = data.opportunity_sig || null;
 
     if (step < 1 || step > 4 || !Number.isInteger(step)) {
-      sendJson(res, 400, { success: false, message: 'Step invalido.' });
+      sendJson(res, 400, { success: false, message: 'Step inválido.' });
       return;
     }
 
@@ -711,37 +713,37 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
   var telefone = (fields.telefone_form || fields.telefone || '').trim().replace(/\D/g, '').slice(0, 15);
 
   if (!nomeCompleto) {
-    sendJson(res, 400, { success: false, message: 'Nome completo e obrigatorio.' });
+    sendJson(res, 400, { success: false, message: 'Nome completo é obrigatório.' });
     return;
   }
 
   if (!cpf) {
-    sendJson(res, 400, { success: false, message: 'CPF e obrigatorio.' });
+    sendJson(res, 400, { success: false, message: 'CPF é obrigatório.' });
     return;
   }
 
   if (!isValidCpf(cpf)) {
-    sendJson(res, 400, { success: false, message: 'CPF invalido.' });
+    sendJson(res, 400, { success: false, message: 'CPF inválido.' });
     return;
   }
 
   if (!email) {
-    sendJson(res, 400, { success: false, message: 'E-mail e obrigatorio.' });
+    sendJson(res, 400, { success: false, message: 'E-mail é obrigatório.' });
     return;
   }
 
   if (!EMAIL_REGEX.test(email)) {
-    sendJson(res, 400, { success: false, message: 'E-mail invalido.' });
+    sendJson(res, 400, { success: false, message: 'E-mail inválido.' });
     return;
   }
 
   if (!telefone) {
-    sendJson(res, 400, { success: false, message: 'Telefone e obrigatorio.' });
+    sendJson(res, 400, { success: false, message: 'Telefone é obrigatório.' });
     return;
   }
 
   if (telefone.length < 10) {
-    sendJson(res, 400, { success: false, message: 'Telefone invalido.' });
+    sendJson(res, 400, { success: false, message: 'Telefone inválido.' });
     return;
   }
 
@@ -752,6 +754,7 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
   var profissao = (fields.profissao || '').trim().slice(0, 255);
   var facebookInstagram = (fields.facebook_instagram || '').trim().slice(0, 255);
   var tipoAnimal = (fields.tipo_animal || '').trim().slice(0, 50);
+  var comoConheceu = (fields.como_conheceu || '').trim().slice(0, 100);
   var cep = (fields.cep || '').trim().slice(0, 10);
   var rua = (fields.rua || '').trim().slice(0, 255);
   var numero = (fields.numero || '').trim().slice(0, 20);
@@ -767,7 +770,6 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
     cpf: cpf,
     client_ip: clientIp,
     client_ua: req.headers['user-agent'] || '',
-    source: 'amahcats',
   };
 
   if (nomeSocial) payload.nome_social = nomeSocial;
@@ -777,8 +779,10 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
   if (profissao) payload.profissao = profissao;
   if (facebookInstagram) payload.redes_sociais = facebookInstagram;
   // AmahCats: default gatos (sem tipo_animal no formulario)
-  var SPECIES_MAP = { cachorro: 'caes', gato: 'gatos' };
+  var SPECIES_MAP = { cachorro: 'cães', gato: 'gatos' };
   payload.species_preference = SPECIES_MAP[tipoAnimal] || tipoAnimal || 'gatos';
+  payload.how_found = comoConheceu || undefined;
+  payload.intake_source = 'amahcats';
 
   if (cep || rua || numero || bairro || cidade || uf) {
     payload.endereco = { cep: cep, rua: rua, numero: numero, bairro: bairro, complemento: complemento, cidade: cidade, uf: uf };
@@ -814,23 +818,23 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
 
 // Mapeia nomes do formulario HTML para nomes canonicos dos custom fields no LATE
 var FIELD_RENAME = { raca: 'raca_interesse', animais_quais: 'quais_animais' };
-var FIELD_STRIP = { tipo_animal: true, consent: true, consent_form: true, 'cf-turnstile-response': true };
+var FIELD_STRIP = { tipo_animal: true, consent: true, consent_form: true, 'cf-turnstile-response': true, como_conheceu: true };
 
 async function handleEntrevistaStepN(res, step, fields, opportunityId, opportunitySig) {
   if (!opportunityId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(opportunityId)) {
-    sendJson(res, 400, { success: false, message: 'ID de oportunidade invalido.' });
+    sendJson(res, 400, { success: false, message: 'ID de oportunidade inválido.' });
     return;
   }
 
   if (!opportunitySig || typeof opportunitySig !== 'string' || !/^[0-9a-f]{64}$/i.test(opportunitySig)) {
-    sendJson(res, 403, { success: false, message: 'Assinatura invalida.' });
+    sendJson(res, 403, { success: false, message: 'Assinatura inválida.' });
     return;
   }
   var expectedSig = crypto.createHmac('sha256', OPPORTUNITY_HMAC_SECRET).update(opportunityId).digest('hex');
   var sigBuffer = Buffer.from(opportunitySig, 'hex');
   var expectedBuffer = Buffer.from(expectedSig, 'hex');
   if (!crypto.timingSafeEqual(sigBuffer, expectedBuffer)) {
-    sendJson(res, 403, { success: false, message: 'Assinatura invalida.' });
+    sendJson(res, 403, { success: false, message: 'Assinatura inválida.' });
     return;
   }
   var url = CRM_INTAKE_URL.replace('/intake/iacd', '/intake/iacd/' + opportunityId + '/fields');
@@ -864,7 +868,7 @@ async function handleEntrevistaStepN(res, step, fields, opportunityId, opportuni
   } catch (err) {
     console.error('[' + localTimestamp() + '] ENTREVISTA step' + step + '->LATE ERRO: ' + err.message);
     if (step === 4) {
-      sendJson(res, 500, { success: false, message: 'Erro ao enviar formulario. Tente novamente.' });
+      sendJson(res, 500, { success: false, message: 'Erro ao enviar formulário. Tente novamente.' });
     } else {
       saveContingencyJson({
         timestamp: new Date().toISOString(), form: 'entrevista',
@@ -927,7 +931,7 @@ async function handleContatoPreview(req, res, clientIp) {
   var token = url.searchParams.get('t');
 
   if (!token) {
-    sendJson(res, 400, { success: false, message: 'Token obrigatorio' });
+    sendJson(res, 400, { success: false, message: 'Token obrigatório' });
     return;
   }
 
@@ -938,7 +942,7 @@ async function handleContatoPreview(req, res, clientIp) {
     if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)) {
       contactId = token;
     } else {
-      sendJson(res, 403, { success: false, message: 'Token invalido ou expirado.' });
+      sendJson(res, 403, { success: false, message: 'Token inválido ou expirado.' });
       return;
     }
   }
