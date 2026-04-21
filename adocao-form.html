@@ -158,6 +158,38 @@
               <label for="facebook_instagram">Facebook / Instagram</label>
               <input type="text" id="facebook_instagram" name="facebook_instagram" required placeholder="@seu_perfil" />
             </div>
+
+            <div class="form-group">
+              <fieldset>
+                <legend>Qual tipo de animal você deseja adotar?</legend>
+                <div class="radio-group">
+                  <label>
+                    <input type="radio" name="tipo_animal" value="cachorro" required />
+                    Cachorro
+                  </label>
+                  <label>
+                    <input type="radio" name="tipo_animal" value="gato" />
+                    Gato
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="form-group">
+              <label for="como_conheceu">Como você nos conheceu?</label>
+              <select id="como_conheceu" name="como_conheceu" required>
+                <option value="">Selecione...</option>
+                <option value="google">Google / Busca online</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="tiktok">TikTok</option>
+                <option value="youtube">YouTube</option>
+                <option value="indicacao">Indicação de amigo ou familiar</option>
+                <option value="indicacao_veterinario">Indicação de veterinário</option>
+                <option value="evento_feira">Evento ou feira</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
           </div>
 
           <!-- PANEL 1: Sobre o Animal-->
@@ -231,6 +263,18 @@
                   <label>
                     <input type="radio" name="tipo_imovel" value="apartamento" />
                     Apartamento
+                  </label>
+                  <label>
+                    <input type="radio" name="tipo_imovel" value="sitio" />
+                    Sítio
+                  </label>
+                  <label>
+                    <input type="radio" name="tipo_imovel" value="chacara" />
+                    Chácara
+                  </label>
+                  <label>
+                    <input type="radio" name="tipo_imovel" value="outro" />
+                    Outro
                   </label>
                 </div>
               </fieldset>
@@ -355,7 +399,27 @@
               </div>
               <div class="form-group">
                 <fieldset>
-                  <legend>Estão vacinados e castrados?</legend>
+                  <legend>Os animais estão vacinados?</legend>
+                  <div class="radio-group">
+                    <label>
+                      <input type="radio" name="animais_vacinados" value="sim" />
+                      Sim
+                    </label>
+                    <label>
+                      <input type="radio" name="animais_vacinados" value="nao" />
+                      Não
+                    </label>
+                    <label>
+                      <input type="radio" name="animais_vacinados" value="parcialmente" />
+                      Parcialmente
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="form-group">
+                <fieldset>
+                  <legend>Os animais estão castrados?</legend>
                   <div class="radio-group">
                     <label>
                       <input type="radio" name="animais_castrados" value="sim" />
