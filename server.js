@@ -680,8 +680,8 @@ function handleEntrevista(req, res, clientIp) {
       return;
     }
 
-    // Verificar Turnstile no step final (step 4)
-    if (step === 3) {
+    // Verificar Turnstile no step final (step 4 = panel 3)
+    if (step === 4) {
       var turnstileToken = (data['cf-turnstile-response'] || '');
       var turnstileValid = await verifyTurnstile(turnstileToken, clientIp);
       if (!turnstileValid) {
@@ -859,11 +859,11 @@ async function handleEntrevistaStepN(res, step, fields, opportunityId, opportuni
     }
 
     console.info('[' + localTimestamp() + '] ENTREVISTA step' + step + '->LATE opp=' + opportunityId + ' ok');
-    var message = step === 3 ? 'Formulário enviado com sucesso!' : 'Dados salvos!';
+    var message = step === 4 ? 'Formulário enviado com sucesso!' : 'Dados salvos!';
     sendJson(res, 200, { success: true, message: message });
   } catch (err) {
     console.error('[' + localTimestamp() + '] ENTREVISTA step' + step + '->LATE ERRO: ' + err.message);
-    if (step === 3) {
+    if (step === 4) {
       sendJson(res, 500, { success: false, message: 'Erro ao enviar formulario. Tente novamente.' });
     } else {
       saveContingencyJson({
