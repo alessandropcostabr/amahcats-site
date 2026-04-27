@@ -1024,6 +1024,7 @@ const server = http.createServer((req, res) => {
   };
 
   if (flags.isScanner) {
+    console.warn(`[${new Date().toISOString()}] 403 scanner method=${req.method} path=${pathname} ip=${clientIp} ua="${(req.headers['user-agent'] || '-').slice(0, 80)}"`);
     res.writeHead(403, { 'Content-Type': 'text/plain' });
     return res.end('Forbidden');
   }
