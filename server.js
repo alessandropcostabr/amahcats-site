@@ -591,7 +591,7 @@ async function handleAnimais(req, res, query) {
         var a = animals[i];
         var speciesLabel = a.species === 'gato' ? 'Gato' : a.species === 'cachorro' ? 'Cachorro' : 'Outro';
         var imgHtml = a.cover_photo
-          ? '<img src="' + escHtml(ABRIGO_PUBLIC_URL + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '" loading="lazy">'
+          ? '<img src="' + '/animal-foto/' + escHtml(path.basename(a.cover_photo)) + '" alt="Foto de ' + escHtml(a.name) + '" loading="lazy">'
           : '<div class="abrigo-placeholder">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
         cardsHtml += '<a href="/animais/' + escHtml(a.slug) + '" style="text-decoration:none;color:inherit;">'
           + '<div class="abrigo-card">' + imgHtml
@@ -637,7 +637,7 @@ async function handleAnimalDetalhe(req, res, slug) {
     var genderLabel  = a.gender === 'macho' ? 'Macho' : a.gender === 'femea' ? 'Femea' : null;
 
     var imgHtml = a.cover_photo
-      ? '<img src="' + escHtml(ABRIGO_PUBLIC_URL + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '">'
+      ? '<img src="' + '/animal-foto/' + escHtml(path.basename(a.cover_photo)) + '" alt="Foto de ' + escHtml(a.name) + '">'
       : '<div class="abrigo-placeholder" style="border-radius:var(--radius-card);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:var(--color-accent);font-size:5rem;">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
 
     var tableRows = '';
@@ -1215,6 +1215,30 @@ const server = http.createServer((req, res) => {
   if (isRateLimited(bucket, clientIp)) {
     res.writeHead(429, { 'Content-Type': 'text/plain', 'Retry-After': '60' });
     return res.end('Too Many Requests');
+  }
+
+  // GET /animal-foto/:filename — proxy de fotos do abrigo (evita CORP cross-origin)
+  if (req.method === 'GET' && pathname.startsWith('/animal-foto/')) {
+    var filename = path.basename(pathname);
+    if (/^[a-zA-Z0-9_\-]+\.(jpg|jpeg|png|webp|gif)$/i.test(filename)) {
+      var proxyReq = require('http').request(
+        { host: '192.168.0.125', port: 3200, path: '/uploads/animals/' + filename, method: 'GET' },
+        function(proxyRes) {
+          var ct = proxyRes.headers['content-type'] || 'image/jpeg';
+          res.writeHead(proxyRes.statusCode, {
+            'Content-Type': ct,
+            'Cache-Control': 'public, max-age=86400',
+            'X-Robots-Tag': 'noindex',
+          });
+          proxyRes.pipe(res);
+        }
+      );
+      proxyReq.on('error', function() {
+        res.writeHead(502); res.end();
+      });
+      proxyReq.end();
+      return;
+    }
   }
 
   // GET /animais — catalogo publico de adocao (late-abrigo)
