@@ -592,6 +592,14 @@ var PAGE_SHELL_HEAD = '<!DOCTYPE html><html lang="pt-BR"><head>'
   + '.abrigo-compat__icon--no{background:#fef2f2;color:#991b1b;border-color:#fecaca;}'
   + '.abrigo-card__cta{display:block;margin-top:.65rem;padding:.42rem 0;background:var(--color-primary);color:#fff;border-radius:var(--radius-pill);font-size:.78rem;font-weight:700;text-align:center;}'
   + '.abrigo-no-results{display:none;color:var(--color-muted);text-align:center;padding:3rem 0;}'
+  + '.abrigo-fab{display:none;position:fixed;bottom:1.25rem;right:1.25rem;z-index:200;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-pill);padding:.6rem 1.2rem;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(207,108,120,.4);align-items:center;gap:.35rem;}'
+  + '@media(max-width:640px){.abrigo-filters{display:none;}.abrigo-fab{display:flex;}}'
+  + '.abrigo-sheet{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.45);}'
+  + '.abrigo-sheet.open{display:block;}'
+  + '.abrigo-sheet__panel{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:1.25rem 1.25rem 0 0;padding:1.5rem 1.25rem 2.5rem;max-height:75vh;overflow-y:auto;}'
+  + '.abrigo-sheet__handle{width:2.5rem;height:.25rem;background:#e5e7eb;border-radius:2px;margin:0 auto .75rem;}'
+  + '.abrigo-sheet__title{font-weight:700;font-size:1rem;margin-bottom:1rem;display:block;}'
+  + '.abrigo-sheet__close{width:100%;margin-top:1.25rem;}'
   + '</style>';
 
 function abrigoPage(title, bodyHtml) {
@@ -630,7 +638,11 @@ function buildCard(a, isMemorial) {
     : '<div class="abrigo-placeholder" style="background:var(--color-accent);display:flex;align-items:center;justify-content:center;font-size:3.5rem;">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
   var memorialExtra = isMemorial ? ' abrigo-card--memorial' : '';
   var starBadge = isMemorial ? '<span style="position:absolute;top:0.5rem;left:0.5rem;font-size:1.1rem;" title="Virou estrelinha">🌟</span>' : '';
-  return '<a href="/animais/' + escHtml(a.slug) + '" data-name="' + escHtml((a.name || '').toLowerCase()) + '" style="text-decoration:none;color:inherit;">'
+  return '<a href="/animais/' + escHtml(a.slug) + '" data-name="' + escHtml((a.name || '').toLowerCase()) + '"'
+    + (a.compat_cats === true     ? ' data-compat-cats="true"' : '')
+    + (a.compat_dogs === true     ? ' data-compat-dogs="true"' : '')
+    + (a.compat_children === true ? ' data-compat-children="true"' : '')
+    + ' style="text-decoration:none;color:inherit;">'
     + '<div class="abrigo-card' + memorialExtra + '">'
     + '<div class="abrigo-card__media">' + imgEl
     + '<span class="abrigo-status ' + si.cls + '">' + si.label + '</span>'
@@ -745,7 +757,21 @@ async function handleAnimais(req, res, query) {
         }).join('')
       + '</div>';
 
-    var filtersHtml = '<div class="abrigo-filters">' + speciesRow + statusRow + '</div>';
+    var compatRow = '<div class="abrigo-filter-row">'
+      + '<span class="abrigo-filter-label">Compatível com</span>'
+      + '<button class="btn--filter" data-compat-filter="cats">🐱 Gatos</button>'
+      + '<button class="btn--filter" data-compat-filter="dogs">🐕 Cães</button>'
+      + '<button class="btn--filter" data-compat-filter="children">👶 Crianças</button>'
+      + '</div>';
+    var filtersHtml = '<div class="abrigo-filters">' + speciesRow + statusRow + compatRow + '</div>';
+    var sheetHtml = '<button class="abrigo-fab" id="abrigo-fab" aria-label="Abrir filtros">🔽 Filtrar</button>'
+      + '<div class="abrigo-sheet" id="abrigo-sheet" role="dialog" aria-modal="true">'
+      + '<div class="abrigo-sheet__panel">'
+      + '<div class="abrigo-sheet__handle"></div>'
+      + '<span class="abrigo-sheet__title">Filtrar animais</span>'
+      + speciesRow + statusRow + compatRow
+      + '<button class="btn btn--primary abrigo-sheet__close" id="abrigo-sheet-close">Aplicar filtros</button>'
+      + '</div></div>';
 
     // carousel de disponiveis (exibir apenas quando nao ha filtro de status ativo)
     var carouselSource = vivos.filter(function(a) {
@@ -787,24 +813,40 @@ async function handleAnimais(req, res, query) {
 
     // busca client-side (filtra por data-name em tempo real)
     var noResultsHtml = '<p class="abrigo-no-results" id="abrigo-no-results" role="status">Nenhum animal encontrado para esta busca.</p>';
-    var searchScript = '<script>(function(){'
+    var filterScript = '<script>(function(){'
       + 'var inp=document.getElementById("abrigo-search");'
-      + 'if(!inp)return;'
-      + 'var links=document.querySelectorAll(".abrigo-grid>a[data-name]");'
       + 'var noRes=document.getElementById("abrigo-no-results");'
-      + 'inp.addEventListener("input",function(){'
-      + 'var q=inp.value.trim().toLowerCase();'
+      + 'var compatActive={};'
+      + 'function applyFilters(){'
+      + 'var q=inp?inp.value.trim().toLowerCase():"";'
+      + 'var keys=Object.keys(compatActive).filter(function(k){return compatActive[k];});'
+      + 'var links=document.querySelectorAll(".abrigo-grid>a[data-name]");'
       + 'var found=0;'
       + 'links.forEach(function(a){'
-      + 'var show=!q||(a.getAttribute("data-name")||"").includes(q);'
-      + 'a.style.display=show?"":"none";'
-      + 'if(show)found++;'
+      + 'var nm=!q||(a.getAttribute("data-name")||"").includes(q);'
+      + 'var cm=keys.every(function(k){return a.getAttribute("data-compat-"+k)==="true";});'
+      + 'var show=nm&&cm;a.style.display=show?"":"none";if(show)found++;'
       + '});'
-      + 'if(noRes)noRes.style.display=(q&&found===0)?"block":"none";'
-      + '});'
+      + 'if(noRes)noRes.style.display=(found===0&&(q||keys.length))?"block":"none";'
+      + '}'
+      + 'if(inp)inp.addEventListener("input",applyFilters);'
+      + 'document.querySelectorAll("[data-compat-filter]").forEach(function(btn){'
+      + 'btn.addEventListener("click",function(){'
+      + 'var k=btn.getAttribute("data-compat-filter");'
+      + 'compatActive[k]=!compatActive[k];'
+      + 'btn.classList.toggle("active",!!compatActive[k]);'
+      + 'applyFilters();});});'
+      + 'var fab=document.getElementById("abrigo-fab");'
+      + 'var sheet=document.getElementById("abrigo-sheet");'
+      + 'var closeBtn=document.getElementById("abrigo-sheet-close");'
+      + 'if(fab&&sheet){'
+      + 'fab.onclick=function(){sheet.classList.add("open");document.body.style.overflow="hidden";};'
+      + 'if(closeBtn)closeBtn.onclick=function(){sheet.classList.remove("open");document.body.style.overflow="";};'
+      + 'sheet.addEventListener("click",function(e){if(e.target===sheet){sheet.classList.remove("open");document.body.style.overflow="";}});'
+      + '}'
       + '})();<\/script>';
 
-    var bodyHtml = heroHtml + carouselHtml + searchHtml + filtersHtml + cardsHtml + noResultsHtml + memorialHtml + searchScript;
+    var bodyHtml = heroHtml + carouselHtml + searchHtml + filtersHtml + cardsHtml + noResultsHtml + memorialHtml + sheetHtml + filterScript;
     var html = abrigoPage('Animais para Adoção', bodyHtml);
     res.writeHead(200, Object.assign({}, SECURITY_HEADERS, { 'Content-Type': 'text/html; charset=utf-8' }));
     res.end(html);
@@ -879,7 +921,11 @@ async function handleAnimalDetalhe(req, res, slug) {
       + (a.personality ? '<h3 style="margin-bottom:0.4rem;">Personalidade</h3><p style="line-height:1.7;margin-bottom:1rem;">' + escHtml(a.personality) + '</p>' : '')
       + (a.history ? '<h3 style="margin-bottom:0.4rem;">História</h3><p style="line-height:1.7;margin-bottom:1rem;">' + escHtml(a.history) + '</p>' : '')
       + ctaHtml
-      + '</div></div>';
+      + '</div></div>'
+      + (a.photos && a.photos.length ? '<div style="margin-top:1.5rem;"><h3 style="font-size:1rem;margin-bottom:0.75rem;">Mais fotos</h3>'
+          + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem;">'
+          + a.photos.map(function(url){ return '<img src="/animal-foto/' + escHtml(path.basename(url)) + '" alt="Foto de ' + escHtml(a.name) + '" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radius-card);">'; }).join('')
+          + '</div></div>' : '');
 
     var html = abrigoPage(a.name, infoHtml);
     res.writeHead(200, Object.assign({}, SECURITY_HEADERS, { 'Content-Type': 'text/html; charset=utf-8' }));
