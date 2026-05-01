@@ -40,6 +40,9 @@ const SMTP_PASS = process.env.SMTP_PASS || '';
 const SMTP_FROM = process.env.SMTP_FROM || '';
 const ALERT_EMAIL_TO = process.env.ALERT_EMAIL_TO || '';
 
+// ---------- Abrigo API (late-abrigo, rede local) ----------
+const ABRIGO_API = process.env.ABRIGO_API_URL || 'http://192.168.0.125:3200';
+
 // Dominio canonico e secundarios (redirect 301)
 const CANONICAL_DOMAIN = 'amahcats.com.br';
 const SECONDARY_DOMAINS = [
@@ -515,6 +518,161 @@ async function forwardToIntake({ nome, email, telefone, especie, mensagem, clien
     throw err;
   }
   return result;
+}
+
+// ---------- Abrigo: catalogo publico ----------
+
+var PAGE_SHELL_HEAD = '<!DOCTYPE html><html lang="pt-BR"><head>'
+  + '<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+  + '<link rel="icon" type="image/png" href="/assets/amahcats_logo.png">'
+  + '<link rel="stylesheet" href="/css/style.css?v=4">'
+  + '<link rel="preconnect" href="https://fonts.googleapis.com">'
+  + '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+  + '<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">'
+  + '<style>'
+  + '.abrigo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;}'
+  + '.abrigo-card{background:#fff;border-radius:var(--radius-card);box-shadow:var(--shadow-card);overflow:hidden;transition:transform var(--transition),box-shadow var(--transition);}'
+  + '.abrigo-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(0,0,0,0.13);}'
+  + '.abrigo-card img,.abrigo-card .abrigo-placeholder{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--color-accent);display:flex;align-items:center;justify-content:center;font-size:3.5rem;}'
+  + '.abrigo-card__body{padding:1rem;}'
+  + '.abrigo-pill{display:inline-block;padding:0.2rem 0.65rem;border-radius:var(--radius-pill);font-size:0.75rem;font-weight:700;background:var(--color-accent);color:var(--color-dark);}'
+  + '.abrigo-filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.75rem;}'
+  + '.abrigo-back{display:inline-block;margin-bottom:1.5rem;color:var(--color-muted);font-size:0.9rem;}'
+  + '.abrigo-detalhe{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start;}'
+  + '.abrigo-detalhe img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radius-card);}'
+  + '.abrigo-info-table td{padding:0.4rem 0;vertical-align:top;}'
+  + '.abrigo-info-table td:first-child{color:var(--color-muted);width:38%;}'
+  + '.abrigo-cta{background:var(--color-accent);border-radius:var(--radius-card);padding:1.5rem;margin-top:1rem;}'
+  + '@media(max-width:640px){.abrigo-detalhe{grid-template-columns:1fr;}}'
+  + '</style>';
+
+function abrigoPage(title, bodyHtml) {
+  return PAGE_SHELL_HEAD
+    + '<title>' + escHtml(title) + ' - Amah Cats</title></head><body>'
+    + '<header class="header header--scrolled" style="position:sticky;top:0;z-index:100;">'
+    + '<a href="/" class="header__logo"><img src="/assets/amahcats_logo.png" alt="Amah Cats"></a>'
+    + '<nav class="header__nav"><a href="/#adocao">Adotar</a><a href="/animais" style="font-weight:700;">Animais</a></nav>'
+    + '</header>'
+    + '<main id="main-content" style="padding:3rem 0 5rem;"><div class="container">'
+    + bodyHtml
+    + '</div></main>'
+    + '<footer style="text-align:center;padding:2rem;color:var(--color-muted);font-size:0.85rem;">'
+    + '&copy; ' + new Date().getFullYear() + ' Amah Cats &mdash; Adocao responsavel'
+    + '</footer></body></html>';
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function handleAnimais(req, res, query) {
+  try {
+    var species = (query && query.get('species')) ? query.get('species') : '';
+    var apiUrl = ABRIGO_API + '/api/animals/public?status=disponivel&limit=100'
+      + (species ? '&species=' + encodeURIComponent(species) : '');
+    var apiRes = await fetch(apiUrl, { signal: AbortSignal.timeout(8000) });
+    var json = await apiRes.json();
+    var animals = (json.success && Array.isArray(json.data)) ? json.data : [];
+
+    var filterHtml = '<div class="abrigo-filters">'
+      + '<a href="/animais" class="btn ' + (!species ? 'btn--primary' : '') + '" style="border-radius:var(--radius-pill);padding:0.5rem 1.25rem;">Todos</a>'
+      + '<a href="/animais?species=gato" class="btn ' + (species === 'gato' ? 'btn--primary' : '') + '" style="border-radius:var(--radius-pill);padding:0.5rem 1.25rem;">Gatos</a>'
+      + '<a href="/animais?species=cachorro" class="btn ' + (species === 'cachorro' ? 'btn--primary' : '') + '" style="border-radius:var(--radius-pill);padding:0.5rem 1.25rem;">Cachorros</a>'
+      + '</div>';
+
+    var cardsHtml = '';
+    if (animals.length === 0) {
+      cardsHtml = '<p style="color:var(--color-muted);text-align:center;padding:3rem 0;">Nenhum animal disponivel no momento. Volte em breve!</p>';
+    } else {
+      cardsHtml = '<div class="abrigo-grid">';
+      for (var i = 0; i < animals.length; i++) {
+        var a = animals[i];
+        var speciesLabel = a.species === 'gato' ? 'Gato' : a.species === 'cachorro' ? 'Cachorro' : 'Outro';
+        var imgHtml = a.cover_photo
+          ? '<img src="' + escHtml(ABRIGO_API + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '" loading="lazy">'
+          : '<div class="abrigo-placeholder">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
+        cardsHtml += '<a href="/animais/' + escHtml(a.slug) + '" style="text-decoration:none;color:inherit;">'
+          + '<div class="abrigo-card">' + imgHtml
+          + '<div class="abrigo-card__body">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">'
+          + '<strong style="font-size:1rem;">' + escHtml(a.name) + '</strong>'
+          + '<span class="abrigo-pill">' + escHtml(speciesLabel) + '</span>'
+          + '</div>'
+          + (a.breed ? '<p style="color:var(--color-muted);font-size:0.83rem;margin:0;">' + escHtml(a.breed) + '</p>' : '')
+          + (a.birth_approx ? '<p style="color:var(--color-muted);font-size:0.83rem;margin:0;">' + escHtml(a.birth_approx) + '</p>' : '')
+          + '</div></div></a>';
+      }
+      cardsHtml += '</div>';
+    }
+
+    var bodyHtml = '<h1 style="font-size:2rem;margin-bottom:0.5rem;">Animais para Adocao</h1>'
+      + '<p style="color:var(--color-muted);margin-bottom:1.75rem;">Conheca os animais disponiveis e encontre seu novo companheiro.</p>'
+      + filterHtml + cardsHtml;
+
+    var html = abrigoPage('Animais para Adocao', bodyHtml);
+    res.writeHead(200, Object.assign({}, SECURITY_HEADERS, { 'Content-Type': 'text/html; charset=utf-8' }));
+    res.end(html);
+  } catch (err) {
+    console.error('[animais] handleAnimais error:', err.message);
+    res.writeHead(503, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end('<h1>Servico temporariamente indisponivel</h1>');
+  }
+}
+
+async function handleAnimalDetalhe(req, res, slug) {
+  try {
+    var apiRes = await fetch(ABRIGO_API + '/api/animals/public/' + encodeURIComponent(slug), { signal: AbortSignal.timeout(8000) });
+    if (apiRes.status === 404) {
+      var page404 = require('fs').readFileSync(require('path').join(__dirname, '404.html'));
+      res.writeHead(404, Object.assign({}, SECURITY_HEADERS, { 'Content-Type': 'text/html; charset=utf-8' }));
+      return res.end(page404);
+    }
+    var json = await apiRes.json();
+    if (!json.success) throw new Error('API error');
+    var a = json.data;
+
+    var speciesLabel = a.species === 'gato' ? 'Gato' : a.species === 'cachorro' ? 'Cachorro' : 'Outro';
+    var genderLabel  = a.gender === 'macho' ? 'Macho' : a.gender === 'femea' ? 'Femea' : null;
+
+    var imgHtml = a.cover_photo
+      ? '<img src="' + escHtml(ABRIGO_API + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '">'
+      : '<div class="abrigo-placeholder" style="border-radius:var(--radius-card);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:var(--color-accent);font-size:5rem;">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
+
+    var tableRows = '';
+    if (a.breed)       tableRows += '<tr><td>Raca</td><td>' + escHtml(a.breed) + '</td></tr>';
+    if (a.color)       tableRows += '<tr><td>Cor</td><td>' + escHtml(a.color) + '</td></tr>';
+    if (a.birth_approx) tableRows += '<tr><td>Idade</td><td>' + escHtml(a.birth_approx) + '</td></tr>';
+    if (genderLabel)   tableRows += '<tr><td>Sexo</td><td>' + escHtml(genderLabel) + '</td></tr>';
+
+    var ctaHtml = a.status === 'disponivel'
+      ? '<div class="abrigo-cta"><h3 style="margin-bottom:0.5rem;">Quero adotar!</h3>'
+        + '<p style="font-size:0.9rem;line-height:1.6;">Entre em contato com o abrigo para iniciar o processo de adocao responsavel.</p>'
+        + '<a href="/#adocao" class="btn btn--primary" style="margin-top:1rem;">Falar com o abrigo</a></div>'
+      : '';
+
+    var infoHtml = '<a href="/animais" class="abrigo-back">&#8592; Voltar ao catalogo</a>'
+      + '<div class="abrigo-detalhe">'
+      + imgHtml
+      + '<div>'
+      + '<h1 style="margin-bottom:0.75rem;">' + escHtml(a.name) + '</h1>'
+      + '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">'
+      + '<span class="abrigo-pill">' + escHtml(speciesLabel) + '</span>'
+      + '</div>'
+      + (tableRows ? '<table class="abrigo-info-table" style="margin-bottom:1rem;width:100%;"><tbody>' + tableRows + '</tbody></table>' : '')
+      + (a.personality ? '<h3 style="margin-bottom:0.4rem;">Personalidade</h3><p style="line-height:1.7;margin-bottom:1rem;">' + escHtml(a.personality) + '</p>' : '')
+      + (a.history ? '<h3 style="margin-bottom:0.4rem;">Historia</h3><p style="line-height:1.7;margin-bottom:1rem;">' + escHtml(a.history) + '</p>' : '')
+      + ctaHtml
+      + '</div></div>';
+
+    var html = abrigoPage(a.name, infoHtml);
+    res.writeHead(200, Object.assign({}, SECURITY_HEADERS, { 'Content-Type': 'text/html; charset=utf-8' }));
+    res.end(html);
+  } catch (err) {
+    console.error('[animais] handleAnimalDetalhe error:', err.message);
+    res.writeHead(503, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end('<h1>Servico temporariamente indisponivel</h1>');
+  }
 }
 
 function handleAdocao(req, res, clientIp) {
@@ -1056,6 +1214,18 @@ const server = http.createServer((req, res) => {
   if (isRateLimited(bucket, clientIp)) {
     res.writeHead(429, { 'Content-Type': 'text/plain', 'Retry-After': '60' });
     return res.end('Too Many Requests');
+  }
+
+  // GET /animais — catalogo publico de adocao (late-abrigo)
+  if (req.method === 'GET' && pathname === '/animais') {
+    handleAnimais(req, res, parsedUrl.searchParams);
+    return;
+  }
+
+  // GET /animais/:slug — ficha publica do animal
+  if (req.method === 'GET' && pathname.startsWith('/animais/')) {
+    var slug = pathname.slice('/animais/'.length).replace(/[^a-z0-9-]/gi, '');
+    if (slug) { handleAnimalDetalhe(req, res, slug); return; }
   }
 
   // POST /api/adocao
