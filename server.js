@@ -679,7 +679,7 @@ async function handleAnimais(req, res, query) {
     // filtros de status
     var statusBase = species ? '?species=' + encodeURIComponent(species) : '';
     var statusQ = function(st) {
-      return st ? (statusBase ? statusBase + '&status=' + st : '?status=' + st) : statusBase || '/animais';
+      return st ? (statusBase ? statusBase + '&status=' + st : '?status=' + st) : statusBase;
     };
     var statusCounts = [
       { key: '',             label: 'Todos (' + totalVivos + ')' },
