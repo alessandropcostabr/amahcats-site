@@ -558,13 +558,40 @@ var PAGE_SHELL_HEAD = '<!DOCTYPE html><html lang="pt-BR"><head>'
   + '.abrigo-info-table td{padding:0.4rem 0;vertical-align:top;}'
   + '.abrigo-info-table td:first-child{color:var(--color-muted);width:38%;}'
   + '.abrigo-cta{background:var(--color-accent);border-radius:var(--radius-card);padding:1.5rem;margin-top:1rem;}'
-  + '.abrigo-memorial summary{cursor:pointer;font-size:1rem;font-weight:600;color:var(--color-muted);padding:1rem 0;list-style:none;}'
+  + '.abrigo-memorial{border-top:1px solid var(--color-border);margin-top:3rem;}'
+  + '.abrigo-memorial summary{cursor:pointer;font-size:.95rem;font-weight:700;color:var(--color-muted);padding:1rem 0;list-style:none;display:flex;align-items:center;gap:.5rem;user-select:none;}'
   + '.abrigo-memorial summary::-webkit-details-marker{display:none;}'
-  + '.abrigo-memorial summary::before{content:"+ ";}'
-  + 'details.abrigo-memorial[open] summary::before{content:"- ";}'
+  + '.abrigo-memorial summary::after{content:"+";font-size:1.1rem;margin-left:auto;}'
+  + 'details.abrigo-memorial[open] summary::after{content:"\\2212";}'
   + '.btn--filter{padding:0.35rem 0.85rem;border-radius:var(--radius-pill);font-size:0.8rem;font-weight:600;border:2px solid var(--color-border);color:var(--color-text);background:#fff;text-decoration:none;}'
   + '.btn--filter.active,.btn--filter:hover{border-color:var(--color-primary);color:var(--color-primary);background:#fff8f8;}'
-  + '@media(max-width:640px){.abrigo-detalhe{grid-template-columns:1fr;}.abrigo-hero h1{font-size:1.7rem;}}'
+  + '@media(max-width:640px){.abrigo-detalhe{grid-template-columns:1fr;}.abrigo-hero h1{font-size:1.7rem;}.abrigo-carousel__card{flex:0 0 138px;}}'
+  + '.abrigo-search-wrap{position:relative;margin-bottom:1.25rem;}'
+  + '.abrigo-search-wrap input{width:100%;padding:.7rem 1rem .7rem 2.75rem;border-radius:var(--radius-pill);border:2px solid var(--color-border);font-size:.9rem;font-family:inherit;background:#fff;transition:border-color .2s,box-shadow .2s;box-sizing:border-box;color:var(--color-text);}'
+  + '.abrigo-search-wrap input:focus{outline:none;border-color:var(--color-primary);box-shadow:0 0 0 3px rgba(207,108,120,.12);}'
+  + '.abrigo-search-wrap__icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);opacity:.45;pointer-events:none;}'
+  + '.abrigo-carousel{overflow:hidden;padding:.3rem 0 1.25rem;position:relative;mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);}'
+  + '.abrigo-carousel__track{display:flex;gap:1rem;width:max-content;animation:abrigo-scroll 32s linear infinite;}'
+  + '.abrigo-carousel:hover .abrigo-carousel__track{animation-play-state:paused;}'
+  + '@keyframes abrigo-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}'
+  + '.abrigo-carousel__card{flex:0 0 158px;background:#fff;border-radius:var(--radius-card);box-shadow:var(--shadow-card);overflow:hidden;transition:transform .2s,box-shadow .2s;text-decoration:none;color:inherit;display:block;}'
+  + '.abrigo-carousel__card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.13);}'
+  + '.abrigo-carousel__media{aspect-ratio:3/4;overflow:hidden;display:flex;align-items:center;justify-content:center;}'
+  + '.abrigo-carousel__media img{width:100%;height:100%;object-fit:cover;}'
+  + '.abrigo-carousel__placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:var(--color-accent);}'
+  + '.abrigo-carousel__name{padding:.48rem .65rem .15rem;font-weight:700;font-size:.85rem;}'
+  + '.abrigo-carousel__meta{padding:0 .65rem .65rem;font-size:.7rem;color:var(--color-muted);}'
+  + '.abrigo-carousel-section{margin-bottom:2rem;}'
+  + '.abrigo-carousel-section__hdr{display:flex;align-items:center;gap:.65rem;margin-bottom:.75rem;}'
+  + '.abrigo-carousel-section__label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--color-muted);white-space:nowrap;}'
+  + '.abrigo-carousel-section__line{flex:1;height:1px;background:var(--color-border);}'
+  + '.abrigo-tag{display:inline-block;padding:.1rem .42rem;border-radius:var(--radius-pill);font-size:.67rem;font-weight:600;background:#fdf2f3;color:var(--color-dark);border:1px solid #f2d4d8;}'
+  + '.abrigo-tags{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.4rem;}'
+  + '.abrigo-compat{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem;}'
+  + '.abrigo-compat__icon{display:inline-flex;align-items:center;gap:.2rem;font-size:.72rem;font-weight:600;padding:.15rem .45rem;border-radius:var(--radius-pill);background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;}'
+  + '.abrigo-compat__icon--no{background:#fef2f2;color:#991b1b;border-color:#fecaca;}'
+  + '.abrigo-card__cta{display:block;margin-top:.65rem;padding:.42rem 0;background:var(--color-primary);color:#fff;border-radius:var(--radius-pill);font-size:.78rem;font-weight:700;text-align:center;}'
+  + '.abrigo-no-results{display:none;color:var(--color-muted);text-align:center;padding:3rem 0;}'
   + '</style>';
 
 function abrigoPage(title, bodyHtml) {
@@ -588,7 +615,7 @@ function escHtml(str) {
 }
 
 var STATUS_INFO = {
-  disponivel:    { label: 'Disponivel',    cls: 's-disponivel' },
+  disponivel:    { label: 'Disponível',    cls: 's-disponivel' },
   reservado:     { label: 'Reservado',     cls: 's-reservado' },
   em_tratamento: { label: 'Em Tratamento', cls: 's-em_tratamento' },
   adotado:       { label: 'Adotado',       cls: 's-adotado' },
@@ -603,7 +630,7 @@ function buildCard(a, isMemorial) {
     : '<div class="abrigo-placeholder" style="background:var(--color-accent);display:flex;align-items:center;justify-content:center;font-size:3.5rem;">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
   var memorialExtra = isMemorial ? ' abrigo-card--memorial' : '';
   var starBadge = isMemorial ? '<span style="position:absolute;top:0.5rem;left:0.5rem;font-size:1.1rem;" title="Virou estrelinha">🌟</span>' : '';
-  return '<a href="/animais/' + escHtml(a.slug) + '" style="text-decoration:none;color:inherit;">'
+  return '<a href="/animais/' + escHtml(a.slug) + '" data-name="' + escHtml((a.name || '').toLowerCase()) + '" style="text-decoration:none;color:inherit;">'
     + '<div class="abrigo-card' + memorialExtra + '">'
     + '<div class="abrigo-card__media">' + imgEl
     + '<span class="abrigo-status ' + si.cls + '">' + si.label + '</span>'
@@ -615,7 +642,29 @@ function buildCard(a, isMemorial) {
     + '</div>'
     + (a.breed ? '<p style="color:var(--color-muted);font-size:0.8rem;margin:0;">' + escHtml(a.breed) + '</p>' : '')
     + (a.birth_approx ? '<p style="color:var(--color-muted);font-size:0.8rem;margin:0;">' + escHtml(a.birth_approx) + '</p>' : '')
+    + (a.tags && a.tags.length ? '<div class="abrigo-tags">' + a.tags.slice(0, 3).map(function(t){ return '<span class="abrigo-tag">#' + escHtml(t) + '</span>'; }).join('') + '</div>' : '')
+    + (function() {
+        var icons = [];
+        if (a.compat_cats     === true) icons.push('<span class="abrigo-compat__icon">🐱 Gatos</span>');
+        if (a.compat_dogs     === true) icons.push('<span class="abrigo-compat__icon">🐕 Cães</span>');
+        if (a.compat_children === true) icons.push('<span class="abrigo-compat__icon">👶 Crianças</span>');
+        if (a.special_needs   === true) icons.push('<span class="abrigo-compat__icon">⚕️ Nec. especiais</span>');
+        return icons.length ? '<div class="abrigo-compat">' + icons.join('') + '</div>' : '';
+      })()
+    + (!isMemorial ? '<span class="abrigo-card__cta">Conhecer ' + escHtml(a.name) + '</span>' : '')
     + '</div></div></a>';
+}
+
+function buildCarouselCard(a) {
+  var imgEl = a.cover_photo
+    ? '<img src="/animal-foto/' + escHtml(path.basename(a.cover_photo)) + '" alt="Foto de ' + escHtml(a.name) + '" loading="lazy">'
+    : '<div class="abrigo-carousel__placeholder">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
+  var meta = a.breed || (a.species === 'gato' ? 'Gato' : 'Cachorro');
+  return '<a href="/animais/' + escHtml(a.slug) + '" class="abrigo-carousel__card">'
+    + '<div class="abrigo-carousel__media">' + imgEl + '</div>'
+    + '<div class="abrigo-carousel__name">' + escHtml(a.name) + '</div>'
+    + '<div class="abrigo-carousel__meta">' + escHtml(meta) + '</div>'
+    + '</a>';
 }
 
 function filterLink(label, href, active) {
@@ -655,7 +704,7 @@ async function handleAnimais(req, res, query) {
 
     // hero banner
     var heroHtml = '<div class="abrigo-hero">'
-      + '<p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.8;margin-bottom:0.4rem;">Abrigo Amah Cats</p>'
+      + '<p style="font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.8;margin-bottom:0.4rem;">Projeto Amah Cats</p>'
       + '<h1>Encontre seu companheiro</h1>'
       + '<p>Animais resgatados aguardando um lar com amor e cuidado.</p>'
       + '<div class="abrigo-hero__stats">'
@@ -670,7 +719,7 @@ async function handleAnimais(req, res, query) {
       return s ? (speciesBase ? speciesBase + '&species=' + s : '?species=' + s) : speciesBase || '/animais';
     };
     var speciesRow = '<div class="abrigo-filter-row">'
-      + '<span class="abrigo-filter-label">Especie</span>'
+      + '<span class="abrigo-filter-label">Espécie</span>'
       + filterLink('Todos', '/animais' + speciesBase, !species)
       + filterLink('🐱 Gatos',    '/animais' + speciesQ('gato'),    species === 'gato')
       + filterLink('🐶 Cachorros','/animais' + speciesQ('cachorro'),species === 'cachorro')
@@ -683,7 +732,7 @@ async function handleAnimais(req, res, query) {
     };
     var statusCounts = [
       { key: '',             label: 'Todos (' + totalVivos + ')' },
-      { key: 'disponivel',   label: 'Disponivel (' + (counts['disponivel'] || 0) + ')' },
+      { key: 'disponivel',   label: 'Disponível (' + (counts['disponivel'] || 0) + ')' },
       { key: 'em_tratamento',label: 'Em Tratamento (' + (counts['em_tratamento'] || 0) + ')' },
       { key: 'reservado',    label: 'Reservado (' + (counts['reservado'] || 0) + ')' },
       { key: 'adotado',      label: 'Adotado (' + (counts['adotado'] || 0) + ')' },
@@ -698,6 +747,29 @@ async function handleAnimais(req, res, query) {
 
     var filtersHtml = '<div class="abrigo-filters">' + speciesRow + statusRow + '</div>';
 
+    // carousel de disponiveis (exibir apenas quando nao ha filtro de status ativo)
+    var carouselSource = vivos.filter(function(a) {
+      return a.status === 'disponivel' && (!species || a.species === species);
+    });
+    var carouselHtml = '';
+    if (carouselSource.length >= 3 && !statusFlt) {
+      carouselHtml = '<div class="abrigo-carousel-section">'
+        + '<div class="abrigo-carousel-section__hdr">'
+        + '<span class="abrigo-carousel-section__label">Disponíveis para adoção</span>'
+        + '<div class="abrigo-carousel-section__line"></div>'
+        + '</div>'
+        + (function() {
+          var cards = carouselSource.slice(0, 8).map(buildCarouselCard).join('');
+          return '<div class="abrigo-carousel"><div class="abrigo-carousel__track">' + cards + cards + '</div></div>';
+        })()
+        + '</div>';
+    }
+
+    // busca textual
+    var searchHtml = '<div class="abrigo-search-wrap"><span class="abrigo-search-wrap__icon">🔍</span>'
+      + '<input type="search" id="abrigo-search" placeholder="Procurar por nome..." autocomplete="off" aria-label="Procurar animal por nome">'
+      + '</div>';
+
     // grid principal
     var cardsHtml = visible.length === 0
       ? '<p style="color:var(--color-muted);text-align:center;padding:3rem 0;">Nenhum animal neste filtro no momento.</p>'
@@ -706,15 +778,34 @@ async function handleAnimais(req, res, query) {
     // secao memorial
     var memorialHtml = '';
     if (memorial.length > 0) {
-      memorialHtml = '<details class="abrigo-memorial" style="border-top:1px solid var(--color-border);margin-top:3rem;">'
-        + '<summary>🌟 Em memoria (' + memorial.length + ') - clique para ver</summary>'
-        + '<p style="color:var(--color-muted);font-size:0.85rem;margin-bottom:1rem;">Animais que passaram pelo abrigo e viraram estrelinhas. Suas historias ficam guardadas aqui com carinho.</p>'
+      memorialHtml = '<details class="abrigo-memorial">'
+        + '<summary>🌟 Em memória (' + memorial.length + ')</summary>'
+        + '<p style="color:var(--color-muted);font-size:0.85rem;margin-bottom:1rem;">Animais que passaram pelo abrigo e viraram estrelinhas. Suas histórias ficam guardadas aqui com carinho.</p>'
         + '<div class="abrigo-grid">' + memorial.map(function(a){ return buildCard(a, true); }).join('') + '</div>'
         + '</details>';
     }
 
-    var bodyHtml = heroHtml + filtersHtml + cardsHtml + memorialHtml;
-    var html = abrigoPage('Animais para Adocao', bodyHtml);
+    // busca client-side (filtra por data-name em tempo real)
+    var noResultsHtml = '<p class="abrigo-no-results" id="abrigo-no-results" role="status">Nenhum animal encontrado para esta busca.</p>';
+    var searchScript = '<script>(function(){'
+      + 'var inp=document.getElementById("abrigo-search");'
+      + 'if(!inp)return;'
+      + 'var links=document.querySelectorAll(".abrigo-grid>a[data-name]");'
+      + 'var noRes=document.getElementById("abrigo-no-results");'
+      + 'inp.addEventListener("input",function(){'
+      + 'var q=inp.value.trim().toLowerCase();'
+      + 'var found=0;'
+      + 'links.forEach(function(a){'
+      + 'var show=!q||(a.getAttribute("data-name")||"").includes(q);'
+      + 'a.style.display=show?"":"none";'
+      + 'if(show)found++;'
+      + '});'
+      + 'if(noRes)noRes.style.display=(q&&found===0)?"block":"none";'
+      + '});'
+      + '})();<\/script>';
+
+    var bodyHtml = heroHtml + carouselHtml + searchHtml + filtersHtml + cardsHtml + noResultsHtml + memorialHtml + searchScript;
+    var html = abrigoPage('Animais para Adoção', bodyHtml);
     res.writeHead(200, Object.assign({}, SECURITY_HEADERS, { 'Content-Type': 'text/html; charset=utf-8' }));
     res.end(html);
   } catch (err) {
@@ -745,32 +836,48 @@ async function handleAnimalDetalhe(req, res, slug) {
       : '<div class="abrigo-placeholder" style="border-radius:var(--radius-card);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:var(--color-accent);font-size:5rem;">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
 
     var tableRows = '';
-    if (a.breed)       tableRows += '<tr><td>Raca</td><td>' + escHtml(a.breed) + '</td></tr>';
+    if (a.breed)       tableRows += '<tr><td>Raça</td><td>' + escHtml(a.breed) + '</td></tr>';
     if (a.color)       tableRows += '<tr><td>Cor</td><td>' + escHtml(a.color) + '</td></tr>';
     if (a.birth_approx) tableRows += '<tr><td>Idade</td><td>' + escHtml(a.birth_approx) + '</td></tr>';
     if (genderLabel)   tableRows += '<tr><td>Sexo</td><td>' + escHtml(genderLabel) + '</td></tr>';
 
     var ctaHtml = isObito
-      ? '<div class="abrigo-cta" style="background:#f3f4f6;"><p style="font-size:1.2rem;margin-bottom:0.5rem;">🌟 Virou estrelinha</p><p style="font-size:0.9rem;line-height:1.6;color:var(--color-muted);">' + escHtml(a.name) + ' passou pelo nosso abrigo e deixou muita saudade. Sua historia fica guardada aqui com carinho.</p></div>'
+      ? '<div class="abrigo-cta" style="background:#f3f4f6;"><p style="font-size:1.2rem;margin-bottom:0.5rem;">🌟 Virou estrelinha</p><p style="font-size:0.9rem;line-height:1.6;color:var(--color-muted);">' + escHtml(a.name) + ' passou pelo nosso abrigo e deixou muita saudade. Sua história fica guardada aqui com carinho.</p></div>'
       : a.status === 'disponivel'
-        ? '<div class="abrigo-cta"><h3 style="margin-bottom:0.5rem;">Quero adotar!</h3><p style="font-size:0.9rem;line-height:1.6;">Entre em contato com o abrigo para iniciar o processo de adocao responsavel.</p><a href="/#adocao" class="btn btn--primary" style="margin-top:1rem;">Falar com o abrigo</a></div>'
+        ? '<div class="abrigo-cta"><h3 style="margin-bottom:0.5rem;">Quero adotar!</h3><p style="font-size:0.9rem;line-height:1.6;">Entre em contato com o abrigo para iniciar o processo de adoção responsável.</p><a href="/#adocao" class="btn btn--primary" style="margin-top:1rem;">Falar com o abrigo</a></div>'
         : a.status === 'reservado'
-          ? '<div class="abrigo-cta" style="background:#fef3c7;"><p style="font-weight:600;">🔒 Reservado</p><p style="font-size:0.9rem;">Este animal ja tem adocao em andamento. Veja outros animais disponiveis!</p><a href="/animais" class="btn btn--filter active" style="margin-top:0.75rem;">Ver outros animais</a></div>'
+          ? '<div class="abrigo-cta" style="background:#fef3c7;"><p style="font-weight:600;">🔒 Reservado</p><p style="font-size:0.9rem;">Este animal já tem adoção em andamento. Veja outros animais disponíveis!</p><a href="/animais" class="btn btn--filter active" style="margin-top:0.75rem;">Ver outros animais</a></div>'
           : a.status === 'adotado'
-            ? '<div class="abrigo-cta" style="background:#fce7f3;"><p style="font-weight:600;">❤️ Adotado!</p><p style="font-size:0.9rem;">Este animal ja encontrou seu lar. Que historia bonita! Veja quem ainda espera por voce.</p><a href="/animais" class="btn btn--filter active" style="margin-top:0.75rem;">Ver disponiveis</a></div>'
+            ? '<div class="abrigo-cta" style="background:#fce7f3;"><p style="font-weight:600;">❤️ Adotado!</p><p style="font-size:0.9rem;">Este animal já encontrou seu lar. Que história bonita! Veja quem ainda espera por você.</p><a href="/animais" class="btn btn--filter active" style="margin-top:0.75rem;">Ver disponíveis</a></div>'
             : '';
 
-    var infoHtml = '<a href="/animais" class="abrigo-back">&#8592; Voltar ao catalogo</a>'
+    var infoHtml = '<a href="/animais" class="abrigo-back">&#8592; Voltar ao catálogo</a>'
       + '<div class="abrigo-detalhe">'
       + imgHtml
       + '<div>'
       + '<h1 style="margin-bottom:0.75rem;">' + escHtml(a.name) + '</h1>'
-      + '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">'
+      + '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem;">'
       + '<span class="abrigo-pill">' + escHtml(speciesLabel) + '</span>'
       + '</div>'
+      + (a.tags && a.tags.length ? '<div class="abrigo-tags" style="margin-bottom:0.75rem;">' + a.tags.map(function(t){ return '<span class="abrigo-tag">#' + escHtml(t) + '</span>'; }).join('') + '</div>' : '')
+      + (function() {
+          var COMPAT = [
+            { key: 'compat_cats',     icon: '🐱', label: 'Bom com gatos' },
+            { key: 'compat_dogs',     icon: '🐕', label: 'Bom com cães' },
+            { key: 'compat_children', icon: '👶', label: 'Bom com crianças' },
+            { key: 'special_needs',   icon: '⚕️', label: 'Necessidades especiais' },
+          ];
+          var icons = COMPAT.filter(function(c){ return a[c.key] !== null && a[c.key] !== undefined; })
+            .map(function(c){
+              var yes = a[c.key] === true;
+              var cls = yes ? 'abrigo-compat__icon' : 'abrigo-compat__icon abrigo-compat__icon--no';
+              return '<span class="' + cls + '">' + c.icon + ' ' + escHtml(c.label) + (yes ? ' ✓' : ' ✗') + '</span>';
+            });
+          return icons.length ? '<div class="abrigo-compat" style="margin-bottom:1rem;">' + icons.join('') + '</div>' : '';
+        })()
       + (tableRows ? '<table class="abrigo-info-table" style="margin-bottom:1rem;width:100%;"><tbody>' + tableRows + '</tbody></table>' : '')
       + (a.personality ? '<h3 style="margin-bottom:0.4rem;">Personalidade</h3><p style="line-height:1.7;margin-bottom:1rem;">' + escHtml(a.personality) + '</p>' : '')
-      + (a.history ? '<h3 style="margin-bottom:0.4rem;">Historia</h3><p style="line-height:1.7;margin-bottom:1rem;">' + escHtml(a.history) + '</p>' : '')
+      + (a.history ? '<h3 style="margin-bottom:0.4rem;">História</h3><p style="line-height:1.7;margin-bottom:1rem;">' + escHtml(a.history) + '</p>' : '')
       + ctaHtml
       + '</div></div>';
 
