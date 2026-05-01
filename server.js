@@ -511,6 +511,7 @@ async function forwardToIntake({ nome, email, telefone, especie, mensagem, clien
     err.statusCode = response.status;
     err.errorCode = result.error_code || null;
     err.userMessage = result.error || null;
+    err.field = result.field || null;
     throw err;
   }
   return result;
@@ -603,7 +604,9 @@ function handleAdocao(req, res, clientIp) {
       }
 
       if (err.statusCode && err.statusCode >= 400 && err.statusCode < 500) {
-        sendJson(res, 400, { success: false, message: 'Dados inválidos. Verifique os campos e tente novamente.' });
+        var body422 = { success: false, message: err.userMessage || 'Dados inválidos. Verifique os campos e tente novamente.' };
+        if (err.field) body422.field = err.field;
+        sendJson(res, err.statusCode, body422);
         return;
       }
 
@@ -810,7 +813,11 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
 
     var result = await response.json();
     if (!response.ok) {
-      throw new Error(result.error || 'CRM intake HTTP ' + response.status);
+      var crmErr = new Error(result.error || 'CRM intake HTTP ' + response.status);
+      crmErr.statusCode = response.status;
+      crmErr.userMessage = result.error || null;
+      crmErr.field = result.field || null;
+      throw crmErr;
     }
 
     var oppId = result.data && result.data.opportunity_id;
@@ -821,6 +828,12 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
     sendJson(res, 200, { success: true, message: 'Dados pessoais salvos!', opportunity_id: oppId, opportunity_sig: oppSig });
   } catch (err) {
     console.error('[' + localTimestamp() + '] ENTREVISTA step1->LATE ERRO: ' + err.message);
+    if (err.statusCode && err.statusCode >= 400 && err.statusCode < 500) {
+      var body = { success: false, message: err.userMessage || 'Dados inválidos. Verifique os campos e tente novamente.' };
+      if (err.field) body.field = err.field;
+      sendJson(res, err.statusCode, body);
+      return;
+    }
     sendJson(res, 500, { success: false, message: 'Erro ao salvar dados pessoais. Tente novamente.' });
   }
 }

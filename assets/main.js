@@ -81,7 +81,11 @@ function submitForm(e) {
         }
         resetTurnstile();
       } else {
-        throw new Error('server error');
+        if (feedback) {
+          feedback.textContent = data.message || 'Ocorreu um erro. Por favor, tente novamente.';
+          feedback.className = 'form-feedback form-feedback--error';
+        }
+        resetTurnstile();
       }
     });
   }).catch(function() {
