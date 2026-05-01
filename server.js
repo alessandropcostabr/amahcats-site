@@ -576,7 +576,7 @@ function handleAdocao(req, res, clientIp) {
         clientUa: req.headers['user-agent'] || '',
         howFound: comoConheceu,
       });
-      console.info('[' + localTimestamp() + '] ADOCAO->LATE id=' + ((result.data && result.data.contact_id) || 'ok') + ' email="' + maskEmail(email) + '"');
+      console.info('[' + localTimestamp() + '] ADOCAO->LATE id=' + ((result.data && result.data.contact_id) || 'ok') + ' email="' + email + '" tel="' + telefone + '"');
       sendJson(res, 200, { success: true, message: 'Interesse registrado com sucesso!' });
     } catch (err) {
       console.error('[' + localTimestamp() + '] ADOCAO->LATE ERRO: status=' + (err.statusCode || '?') + ' code=' + (err.errorCode || '-') + ' msg="' + err.message + '"');
@@ -808,7 +808,7 @@ async function handleEntrevistaStep1(res, fields, clientIp, req) {
     var oppSig = oppId
       ? crypto.createHmac('sha256', OPPORTUNITY_HMAC_SECRET).update(oppId).digest('hex')
       : undefined;
-    console.info('[' + localTimestamp() + '] ENTREVISTA step1->LATE opp=' + (oppId || 'ok') + ' email="' + maskEmail(email) + '"');
+    console.info('[' + localTimestamp() + '] ENTREVISTA step1->LATE opp=' + (oppId || 'ok') + ' email="' + email + '" tel="' + telefone + '"');
     sendJson(res, 200, { success: true, message: 'Dados pessoais salvos!', opportunity_id: oppId, opportunity_sig: oppSig });
   } catch (err) {
     console.error('[' + localTimestamp() + '] ENTREVISTA step1->LATE ERRO: ' + err.message);
