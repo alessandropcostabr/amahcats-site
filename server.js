@@ -41,7 +41,8 @@ const SMTP_FROM = process.env.SMTP_FROM || '';
 const ALERT_EMAIL_TO = process.env.ALERT_EMAIL_TO || '';
 
 // ---------- Abrigo API (late-abrigo, rede local) ----------
-const ABRIGO_API = process.env.ABRIGO_API_URL || 'http://192.168.0.125:3200';
+const ABRIGO_API        = process.env.ABRIGO_API_URL        || 'http://192.168.0.125:3200';
+const ABRIGO_PUBLIC_URL = process.env.ABRIGO_PUBLIC_URL     || 'https://abrigo.late.app.br';
 
 // Dominio canonico e secundarios (redirect 301)
 const CANONICAL_DOMAIN = 'amahcats.com.br';
@@ -590,7 +591,7 @@ async function handleAnimais(req, res, query) {
         var a = animals[i];
         var speciesLabel = a.species === 'gato' ? 'Gato' : a.species === 'cachorro' ? 'Cachorro' : 'Outro';
         var imgHtml = a.cover_photo
-          ? '<img src="' + escHtml(ABRIGO_API + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '" loading="lazy">'
+          ? '<img src="' + escHtml(ABRIGO_PUBLIC_URL + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '" loading="lazy">'
           : '<div class="abrigo-placeholder">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
         cardsHtml += '<a href="/animais/' + escHtml(a.slug) + '" style="text-decoration:none;color:inherit;">'
           + '<div class="abrigo-card">' + imgHtml
@@ -636,7 +637,7 @@ async function handleAnimalDetalhe(req, res, slug) {
     var genderLabel  = a.gender === 'macho' ? 'Macho' : a.gender === 'femea' ? 'Femea' : null;
 
     var imgHtml = a.cover_photo
-      ? '<img src="' + escHtml(ABRIGO_API + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '">'
+      ? '<img src="' + escHtml(ABRIGO_PUBLIC_URL + a.cover_photo) + '" alt="Foto de ' + escHtml(a.name) + '">'
       : '<div class="abrigo-placeholder" style="border-radius:var(--radius-card);aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:var(--color-accent);font-size:5rem;">' + (a.species === 'gato' ? '🐱' : '🐶') + '</div>';
 
     var tableRows = '';
