@@ -306,7 +306,16 @@ function isAdoptRateLimited(ip) {
 }
 
 const BODY_LIMIT = 8192;
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+function isValidBRPhone(digits) {
+  if (digits.length !== 10 && digits.length !== 11) return false;
+  var ddd = parseInt(digits.slice(0, 2), 10);
+  if (ddd < 11) return false;
+  if (digits.length === 11 && digits[2] !== '9') return false;
+  if (digits.length === 10 && (digits[2] === '0' || digits[2] === '1')) return false;
+  return true;
+}
 
 function sendJson(res, status, data) {
   var body = JSON.stringify(data);
@@ -561,7 +570,7 @@ function handleAdocao(req, res, clientIp) {
       return;
     }
 
-    if (telefone.length < 10) {
+    if (!isValidBRPhone(telefone)) {
       sendJson(res, 400, { success: false, message: 'Telefone inválido.' });
       return;
     }
